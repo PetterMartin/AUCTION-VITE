@@ -1,16 +1,19 @@
 import { useState, useEffect, useContext, createContext } from "react";
-import { getProfile } from "../../libs/api";
+import { getProfile } from "../../../libs/api";
 import { HiChatBubbleOvalLeft, HiMiniInformationCircle } from "react-icons/hi2";
 import { FaHeart } from "react-icons/fa";
 import { IoAddCircle } from "react-icons/io5";
 import { PiHouseFill } from "react-icons/pi";
 import { IoSettingsSharp } from "react-icons/io5";
+import { BiLogInCircle } from "react-icons/bi";
 import PropTypes from "prop-types";
-import logo from "../../assets/New-Logo.svg";
-import placeholder from "../../assets/user.png";
-import RegisterModal from "../modal/RegisterModal";
-import LoginModal from "../modal/LoginModal";
-import LogoutButton from "../buttons/LogoutButton";
+import logo from "../../../assets/New-Logo.svg";
+import placeholder from "../../../assets/user.png";
+import RegisterModal from "../../modal/RegisterModal";
+import LoginModal from "../../modal/LoginModal";
+import CreatePostModal from "../../modal/CreatePostModal";
+import LogoutButton from "../../buttons/LogoutButton";
+import LoginToast from "../../toast/LoginToast";
 
 const SidebarContext = createContext();
 
@@ -20,6 +23,7 @@ export default function Sidebar() {
   const [user, setUser] = useState(null);
   const [creditInfo, setCreditInfo] = useState({});
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLogout, setIsLogout] = useState(false);
 
   const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
   const openRegisterModal = () => {
@@ -31,15 +35,24 @@ export default function Sidebar() {
     setLoginModalOpen(true);
   };
 
+  const [isCreatePostModalOpen, setCreatePostModalOpen] = useState(false);
+  const openCreatePostModal = () => {
+    setCreatePostModalOpen(true);
+  };
+
+  const handleLogout = () => {
+    setIsLogout(true);
+  };
+
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         const storedToken = localStorage.getItem("jwt");
-  
+
         if (userId && storedToken) {
           try {
             const profileData = await getProfile(userId, storedToken);
-  
+
             setUser(profileData);
             setCreditInfo({ credits: profileData.credits, currency: "USD" });
             setIsAuthenticated(true);
@@ -54,14 +67,29 @@ export default function Sidebar() {
         console.error("Error fetching user profile:", error);
       }
     };
-  
+
     fetchUserProfile();
   }, [userId, isAuthenticated]);
 
-
   return (
-    <aside className="h-screen fixed z-20 hidden xl:block">
-      <nav className="h-full flex flex-col bg-white border-r shadow-sm">
+    <aside className="h-screen fixed z-20 hidden md:block">
+      <RegisterModal
+        isModalOpen={isRegisterModalOpen}
+        setModalOpen={setRegisterModalOpen}
+        openLoginModal={openLoginModal}
+      />
+      <LoginModal
+        isModalOpen={isLoginModalOpen}
+        setModalOpen={setLoginModalOpen}
+        openRegisterModal={openRegisterModal}
+      />
+      <CreatePostModal
+        isModalOpen={isCreatePostModalOpen}
+        setModalOpen={setCreatePostModalOpen}
+      />
+      {isAuthenticated && <LoginToast name={user && user.name} />}
+
+      <nav className="h-full flex flex-col border-r shadow-sm bg-opacity-70 backdrop-filter backdrop-blur-2xl">
         <div className="p-4 flex justify-center items-center">
           <button
             onClick={() => setExpanded((curr) => !curr)}
@@ -72,37 +100,34 @@ export default function Sidebar() {
         </div>
 
         <SidebarContext.Provider value={{ expanded }}>
-          <ul className="flex-1 px-4">
+          <ul className="flex-1 px-4 text-lg">
             <div className="border-b-2 border-blue-400 mt-2 mb-8"></div>
             <SidebarItem icon={<PiHouseFill />} text="Home" active />
-            <SidebarItem icon={<IoAddCircle />} text="Post" />
-            <SidebarItem
-              icon={<HiChatBubbleOvalLeft />}
-              text="Messages"
-              alert
-            />
-            <SidebarItem icon={<FaHeart />} text="Favorites" />
+            {isAuthenticated && (
+              <SidebarItem
+                icon={<IoAddCircle />}
+                text="Post"
+                onClick={openCreatePostModal}
+              />
+            )}
+            {isAuthenticated && (
+              <SidebarItem
+                icon={<HiChatBubbleOvalLeft />}
+                text="Messages"
+                alert
+              />
+            )}
+            {isAuthenticated && (
+              <SidebarItem icon={<FaHeart />} text="Favorites" />
+            )}
             <SidebarItem icon={<IoSettingsSharp />} text="Settings" />
             <SidebarItem icon={<HiMiniInformationCircle />} text="Help" />
           </ul>
         </SidebarContext.Provider>
 
-        <LogoutButton setUser={setUser}/>
-
         <div className="px-4">
           <div className="border-b-2 border-blue-400"></div>
         </div>
-
-        <RegisterModal
-          isModalOpen={isRegisterModalOpen}
-          setModalOpen={setRegisterModalOpen}
-          openLoginModal={openLoginModal}
-        />
-        <LoginModal
-          isModalOpen={isLoginModalOpen}
-          setModalOpen={setLoginModalOpen}
-          openRegisterModal={openRegisterModal}
-        />
 
         <div className="flex items-center cursor-pointer">
           <img
@@ -117,26 +142,32 @@ export default function Sidebar() {
           )}
 
           <div
-            className={`
-      flex justify-between items-center
-      overflow-hidden transition-all ${expanded ? "w-40" : "w-0"}
-  `}
+            className={`flex justify-between items-center overflow-hidden transition-all ${
+              expanded ? "w-40" : "w-0"
+            }`}
           >
             <div className="w-full text-gray-00" style={{ fontSize: "16px" }}>
-            {isAuthenticated ? (
-          <div className="hover:bg-gray-100 p-3 whitespace-nowrap">
-            {user && user.name}
-          </div>
-        ) : (
-          <div className="hover:bg-gray-100 p-3 whitespace-nowrap">
-            <div onClick={openLoginModal}>Login</div>
-          </div>
-        )}
-        <div className="hover:bg-gray-100 p-3 whitespace-nowrap">
-          <div onClick={openRegisterModal}>Sign Up</div>
-        </div>
-      </div>
-
+              {isAuthenticated ? (
+                <div className="hover:bg-gray-100/50 p-3 whitespace-nowrap text-gray-600">
+                  {user && user.name}
+                </div>
+              ) : (
+                <div className="hover:bg-gray-100/50 p-3 whitespace-nowrap text-gray-600">
+                  <div onClick={openRegisterModal}>Sign Up</div>
+                </div>
+              )}
+              {isAuthenticated ? (
+                <LogoutButton setUser={setUser} onLogout={handleLogout} />
+              ) : (
+                <div
+                  onClick={openLoginModal}
+                  className="flex gap-6 hover:bg-gray-100/50 p-3 whitespace-nowrap text-emerald-500"
+                >
+                  <div>Login</div>
+                  <BiLogInCircle className="text-xl me-8" />
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </nav>
@@ -144,7 +175,7 @@ export default function Sidebar() {
   );
 }
 
-export function SidebarItem({ icon, text, active, alert }) {
+export function SidebarItem({ icon, text, active, alert, onClick }) {
   const { expanded } = useContext(SidebarContext);
 
   SidebarItem.propTypes = {
@@ -152,6 +183,7 @@ export function SidebarItem({ icon, text, active, alert }) {
     text: PropTypes.string,
     active: PropTypes.bool,
     alert: PropTypes.bool,
+    onClick: PropTypes.func,
   };
 
   return (
@@ -163,15 +195,16 @@ export function SidebarItem({ icon, text, active, alert }) {
         ${
           active
             ? "bg-gradient-to-b from-blue-600 to-blue-500 text-white"
-            : "hover:bg-blue-100 text-gray-400 hover:text-blue-500"
+            : "hover:bg-gray-100/50 text-gray-400 hover:text-blue-500"
         }
     `}
       style={{ fontSize: "20px" }}
+      onClick={onClick}
     >
       {icon}
       <span
         className={`overflow-hidden transition-all ${
-          expanded ? "w-28 ml-3" : "w-0"
+          expanded ? "w-28 ml-3 text-lg" : "w-0"
         }`}
       >
         {text}
@@ -187,7 +220,7 @@ export function SidebarItem({ icon, text, active, alert }) {
       {!expanded && (
         <div
           className={`
-          absolute left-full rounded-md px-2 py-1 ml-6
+          absolute left-full rounded-full px-4 py-2 ml-6
           bg-gradient-to-b from-blue-600 to-blue-500 text-white text-sm
           invisible opacity-20 -translate-x-3 transition-all
           group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 z-30
@@ -199,3 +232,4 @@ export function SidebarItem({ icon, text, active, alert }) {
     </li>
   );
 }
+

@@ -4,7 +4,6 @@ import Banners from "./Banners";
 import Listings from "../listings/Listings";
 import FeatureSection from "./FeatureSection";
 import Categories from "./Categories";
-import LoginToast from '../toast/LoginToast';
 
 const HeroSection = () => {
 
@@ -23,8 +22,6 @@ const HeroSection = () => {
       <Banners />
 
       <FeatureSection />
-
-      <LoginToast />
 
       <div className="lg:px-40 px-6 mt-20">
         <div className="flex sm:items-center justify-center gap-56">

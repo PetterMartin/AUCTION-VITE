@@ -1,5 +1,5 @@
 import HeroSection from "../components/hero/HeroSection";
-import Sidebar from "../components/nav/Sidebar";
+import Sidebar from "../components/nav/sidebar/Sidebar";
 import Mobilenav from "../components/nav/MobileNav";
 
 export default function Home() {
