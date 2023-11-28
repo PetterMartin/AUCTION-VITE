@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
-import logo from "../../assets/New-logo.svg";
+import logo from "../../assets/New-Logo.svg";
 import userPicture from "../../assets/user.png";
 
 export default function MobileHeader() {
