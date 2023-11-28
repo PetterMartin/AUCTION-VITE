@@ -4,6 +4,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { FaTshirt, FaWineGlass, FaMobileAlt, FaLaptop } from "react-icons/fa";
 import { GiSofa } from "react-icons/gi";
 import { PiHouseBold } from "react-icons/pi";
+import { TbPhotoPlus } from "react-icons/tb";
 import CountrySelect from "../buttons/CountrySelect";
 import Map from "../buttons/Map";
 
@@ -32,13 +33,14 @@ const STEPS = {
   LOCATION: 1,
   IMAGES: 2,
   DESCRIPTION: 3,
-  PRICE: 4,
+  TIME: 4,
 };
 
 const currentStep = STEPS.CATEGORY;
 
 export default function CreatePostModal({ isModalOpen, setModalOpen }) {
   const [step, setStep] = useState(STEPS.CATEGORY);
+  const [title, setTitle] = useState("");
 
   const closeModal = () => {
     setModalOpen(false);
@@ -64,7 +66,29 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
     event.preventDefault();
 
     const form = event.target;
-    const { title, body, imageUrl } = form.elements;
+    let formTitle, body, imageUrl, endsAt;
+
+    switch (step) {
+      case STEPS.CATEGORY:
+      case STEPS.LOCATION:
+        break;
+
+      case STEPS.IMAGES:
+        imageUrl = form.elements.imageUrl.value;
+        break;
+
+      case STEPS.DESCRIPTION:
+        body = form.elements.body.value;
+        break;
+
+      case STEPS.TIME:
+        formTitle = form.elements.title.value;
+        endsAt = form.elements.endsAt.value;
+        break;
+
+      default:
+        break;
+    }
 
     const accessKey = {
       headers: {
@@ -73,10 +97,10 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
     };
 
     const newListing = {
-      title: title.value,
-      description: body.value,
-      media: [imageUrl.value],
-      endsAt: form.elements.endsAt.value,
+      title: formTitle || "",
+      description: body || "",
+      media: imageUrl ? [imageUrl] : [],
+      endsAt: endsAt || "",
     };
 
     try {
@@ -115,6 +139,9 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
 
   const moveToNextStep = () => {
     setStep((prevStep) => prevStep + 1);
+  };
+  const moveToPreviousStep = () => {
+    setStep((prevStep) => prevStep - 1);
   };
 
   let bodyContent = (
@@ -174,7 +201,14 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
             <Map />
           </div>
         </div>
-        <div className="flex flex-col gap-4 p-6">
+        <div className="flex p-6 gap-4">
+          <button
+            type="button"
+            onClick={moveToPreviousStep}
+            className="w-full border-2 border-gray-800 rounded-md font-semibold hover:bg-gray-800 hover:text-white transition duration-200 ease-in-out"
+          >
+            Back
+          </button>
           <button
             type="button"
             onClick={moveToNextStep}
@@ -182,6 +216,226 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
           >
             Next
           </button>
+        </div>
+      </>
+    );
+  }
+
+  if (step === STEPS.IMAGES) {
+    bodyContent = (
+      <>
+        <div className="flex flex-col gap-8">
+          <div className="relative p-6 flex-auto">
+            <div className="text-start">
+              <div className="text-2xl font-semibold">
+                Add a photo of your listing
+              </div>
+              <div className="font-light text-neutral-500 mt-2 mb-6">
+                Take an appealing photo to attract buyers!
+              </div>
+            </div>
+            <div className="flex flex-col gap-1 mt-2 mb-4">
+              <label
+                htmlFor="imageUrl"
+                className="block text-sm leading-6 text-black"
+              >
+                Upload Image (Optional)
+              </label>
+              <input
+                type="url"
+                id="imageUrl"
+                name="imageUrl"
+                className="border border-gray-300 dark:text-white dark:bg-gray-700 dark:border-gray-600 p-2 rounded-3xl"
+              />
+            </div>
+            <div className="relative cursor-pointer hover:opacity-70 transition border-dashed border-2 p-20 border-neutral-300 flex flex-col justify-center items-center gap-4 text-neutral-600">
+              <TbPhotoPlus size={50} />
+              <div className="font-semibold text-lg">Click to upload</div>
+            </div>
+          </div>
+          <div className="flex p-6 gap-4">
+            <button
+              type="button"
+              onClick={moveToPreviousStep}
+              className="w-full border-2 border-gray-800 rounded-md font-semibold hover:bg-gray-800 hover:text-white transition duration-200 ease-in-out"
+            >
+              Back
+            </button>
+            <button
+              type="button"
+              onClick={moveToNextStep}
+              className="w-full p-4 bg-gradient-to-b from-blue-600 to-blue-500 text-white font-semibold rounded-md transition duration-200 ease-in-out hover:opacity-80"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  if (step === STEPS.DESCRIPTION) {
+    bodyContent = (
+      <>
+        <div className="flex flex-col gap-8">
+          <div className="relative p-6 flex-auto">
+            <div className="text-start">
+              <div className="text-2xl font-semibold">
+                How would you describe your item?
+              </div>
+              <div className="font-light text-neutral-500 mt-2 mb-6">
+                Short and sweet works best!
+              </div>
+            </div>
+            <div className="w-full relative mb-6">
+              <input
+                id="title"
+                name="title"
+                required
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="peer w-full p-4 pt-6 font-light border-2 rounded-md outline-none transition hover:border-blue-400 focus:border-blue-400 cursor-pointer"
+              />
+              <label
+                className="
+                  absolute 
+                  text-md
+                  duration-150 
+                  transform 
+                  -translate-y-3 
+                  top-5 
+                  z-10 
+                  origin-[0] 
+                  left-4
+                  peer-placeholder-shown:scale-100 
+                  peer-placeholder-shown:translate-y-0 
+                  peer-focus:scale-75
+                  peer-focus:-translate-y-4
+                "
+              >
+                Title
+              </label>
+            </div>
+
+            <div className="flex flex-col gap-1 mt-2">
+              <div className="w-full relative">
+                <input
+                  id="body"
+                  name="body"
+                  className="peer w-full p-4 h-20 font-light overflow-hidden text-sm border-2 rounded-md outline-none transition hover:border-blue-400 focus:border-blue-400 cursor-pointer"
+                />
+                <label
+                  htmlFor="userId"
+                  className="
+              absolute 
+              text-md
+              duration-150 
+              transform 
+              -translate-y-3 
+              top-5 
+              z-10 
+              origin-[0] 
+              left-4
+              peer-placeholder-shown:scale-100 
+              peer-placeholder-shown:translate-y-0 
+              peer-focus:scale-75
+              peer-focus:-translate-y-4
+            "
+                >
+                  Description
+                </label>
+              </div>
+            </div>
+          </div>
+          <div className="flex p-6 gap-4">
+            <button
+              type="button"
+              onClick={moveToPreviousStep}
+              className="w-full border-2 border-gray-800 rounded-md font-semibold hover:bg-gray-800 hover:text-white transition duration-200 ease-in-out"
+            >
+              Back
+            </button>
+            <button
+              type="button"
+              onClick={moveToNextStep}
+              className="w-full p-4 bg-gradient-to-b from-blue-600 to-blue-500 text-white font-semibold rounded-md transition duration-200 ease-in-out hover:opacity-80"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  if (step === STEPS.TIME) {
+    bodyContent = (
+      <>
+        <div className="flex flex-col gap-8">
+          <div className="relative p-6 flex-auto">
+            <div className="text-start">
+              <div className="text-2xl font-semibold">Review Your Listing</div>
+              <div className="font-light text-neutral-500 mt-2 mb-6">
+                Take a moment to ensure everything looks just right!
+              </div>
+            </div>
+            <div className="w-full relative mb-6">
+              <input
+                id="title"
+                name="title"
+                required
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="peer w-full p-4 pt-6 font-light border-2 rounded-md outline-none transition hover:border-blue-400 focus:border-blue-400 cursor-pointer"
+              />
+              <label
+                className="
+                  absolute 
+                  text-md
+                  duration-150 
+                  transform 
+                  -translate-y-3 
+                  top-5 
+                  z-10 
+                  origin-[0] 
+                  left-4
+                  peer-placeholder-shown:scale-100 
+                  peer-placeholder-shown:translate-y-0 
+                  peer-focus:scale-75
+                  peer-focus:-translate-y-4
+                "
+              >
+                Title
+              </label>
+            </div>
+            <div className="flex gap-2 font-semibold p-2">
+              <div className="text-xl">🌍</div>
+              <div className="mt-0.5"> {selectedCountry && selectedCountry.label}</div>
+            </div>
+            <input
+              type="datetime-local"
+              id="endsAt"
+              name="endsAt"
+              required
+              className="border border-gray-300 dark:text-white dark:bg-gray-700 dark:border-gray-600 p-4 rounded-3xl"
+            />
+          </div>
+
+          <div className="flex p-6 gap-4">
+            <button
+              type="button"
+              onClick={moveToPreviousStep}
+              className="w-full border-2 border-gray-800 rounded-md font-semibold hover:bg-gray-800 hover:text-white transition duration-200 ease-in-out"
+            >
+              Back
+            </button>
+            <button
+              type="submit"
+              className="w-full p-4 bg-gradient-to-b from-blue-600 to-blue-500 text-white font-semibold rounded-md transition duration-200 ease-in-out hover:opacity-80"
+            >
+              Post
+            </button>
+          </div>
         </div>
       </>
     );

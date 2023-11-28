@@ -25,7 +25,7 @@ function Listings() {
   return (
     <main className="container mx-auto lg:px-20 mt-4">
       <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-4">
-        {listings.map(({ id, title, media, _count, endsAt }) => (
+        {listings.map(({ id, title, description, media, _count, endsAt }) => (
           <div key={id} className="listing-item">
             <div className="aspect-square w-full relative overflow-hidden rounded-xl">
               <img
@@ -56,6 +56,9 @@ function Listings() {
             </div>
             <div className="font-semibold text-lg text-gray-800 mt-1">
               {title}
+            </div>
+            <div className="font-semibold text-gray-400">
+              {description}
             </div>
           </div>
         ))}
