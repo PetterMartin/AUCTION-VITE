@@ -1,8 +1,11 @@
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { AiOutlineClose } from "react-icons/ai";
 import { FaTshirt, FaWineGlass, FaMobileAlt, FaLaptop } from "react-icons/fa";
 import { GiSofa } from "react-icons/gi";
 import { PiHouseBold } from "react-icons/pi";
+import CountrySelect from "../buttons/CountrySelect";
+import Map from "../buttons/Map";
 
 const categories = [
   "Electronics",
@@ -24,7 +27,19 @@ const categoryIcons = {
 
 let lastRequestTime = 0;
 
+const STEPS = {
+  CATEGORY: 0,
+  LOCATION: 1,
+  IMAGES: 2,
+  DESCRIPTION: 3,
+  PRICE: 4,
+};
+
+const currentStep = STEPS.CATEGORY;
+
 export default function CreatePostModal({ isModalOpen, setModalOpen }) {
+  const [step, setStep] = useState(STEPS.CATEGORY);
+
   const closeModal = () => {
     setModalOpen(false);
   };
@@ -35,7 +50,6 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
   };
 
   const access_key = localStorage.getItem("jwt");
-
 
   async function handleOnSubmit(event) {
     const currentTime = Date.now();
@@ -92,6 +106,94 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
       }
     }
   }
+
+  const [selectedCountry, setSelectedCountry] = useState(null);
+
+  const handleChange = (selectedOption) => {
+    setSelectedCountry(selectedOption);
+  };
+
+  const moveToNextStep = () => {
+    setStep((prevStep) => prevStep + 1);
+  };
+
+  let bodyContent = (
+    <>
+      <div className="relative p-6 flex-auto">
+        <div className="text-start">
+          <div className="text-2xl font-semibold">
+            Which of these best describe your product?
+          </div>
+          <div className="font-light text-neutral-500 mt-2 mb-6">
+            Pick a category
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          {categories.map((category, index) => (
+            <div
+              key={index}
+              className="rounded-xl border-2 p-2 flex flex-col items-start text-gray-500 hover:text-blue-400 hover:border-blue-400 focus:border-blue-400 transition cursor-pointer"
+            >
+              <div className="flex items-center justify-center ms-5">
+                {categoryIcons[category]}
+              </div>
+              <div className="px-5 rounded-full mt-2">
+                <p>{category}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="flex flex-col gap-4 p-6">
+        <button
+          type="button"
+          onClick={moveToNextStep}
+          className="w-full p-4 bg-gradient-to-b from-blue-600 to-blue-500 text-white font-semibold rounded-md transition duration-200 ease-in-out hover:opacity-80"
+        >
+          Next
+        </button>
+      </div>
+    </>
+  );
+
+  if (step === STEPS.LOCATION) {
+    bodyContent = (
+      <>
+        <div className="flex flex-col gap-8">
+          <div className="relative p-6 flex-auto">
+            <div className="text-start">
+              <div className="text-2xl font-semibold">
+                Where are you located?
+              </div>
+              <div className="font-light text-neutral-500 mt-2 mb-6">
+                Help the bøver know where to find you
+              </div>
+            </div>
+            <CountrySelect value={selectedCountry} onChange={handleChange} />
+            <Map />
+          </div>
+        </div>
+        <div className="flex flex-col gap-4 p-6">
+          <button
+            type="button"
+            onClick={moveToNextStep}
+            className="w-full p-4 bg-gradient-to-b from-blue-600 to-blue-500 text-white font-semibold rounded-md transition duration-200 ease-in-out hover:opacity-80"
+          >
+            Next
+          </button>
+        </div>
+      </>
+    );
+  }
+
+  useEffect(() => {
+    // Reset step to 0 when modal is closed
+    if (!isModalOpen) {
+      setStep(STEPS.CATEGORY);
+    }
+  }, [isModalOpen]);
+
   return (
     <>
       {isModalOpen && (
@@ -111,109 +213,10 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
                   >
                     <AiOutlineClose size={18} />
                   </button>
-                  <div className="text-lg font-semibold">Login</div>
+                  <div className="text-lg font-semibold">Create a listing</div>
                 </div>
                 {/* BODY */}
-                <div className="relative p-6 flex-auto">
-                  <div className="text-start">
-                    <div className="text-2xl font-semibold">
-                      Which of these best describe your product?
-                    </div>
-                    <div className="font-light text-neutral-500 mt-2 mb-6">
-                      Pick a category
-                    </div>
-                  </div>
-
-                  <section>
-                    <div className="flex flex-col gap-1 my-4">
-                      <label
-                        htmlFor="title"
-                        className="block text-sm leading-6 text-black"
-                      >
-                        Subject
-                      </label>
-
-                      <input
-                        id="title"
-                        name="title"
-                        required
-                        className="w-full h-auto resize-none overflow-hidden text-sm border border-gray-300  dark:text-white dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800 p-2 rounded-3xl"
-                      />
-                    </div>
-                  </section>
-
-                  <div>
-                    <div className="flex flex-col gap-1 my-4">
-                      <label
-                        htmlFor="userId"
-                        className="block text-sm leading-6 text-black"
-                      >
-                        What´s on your mind?
-                      </label>
-                      <input
-                        id="body"
-                        name="body"
-                        className="w-full h-20 resize-none overflow-hidden text-sm border border-gray-300  dark:text-white dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800 p-2 rounded-3xl"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    {categories.map((category, index) => (
-                      <div
-                        key={index}
-                        className="rounded-xl border-2 p-2 flex flex-col items-start text-gray-500 hover:text-blue-500 hover:border-blue-500 transition cursor-pointer"
-                      >
-                        <div className="flex items-center justify-center ms-5">
-                          {categoryIcons[category]}
-                        </div>
-                        <div className="px-5 rounded-full mt-2">
-                          <p>{category}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-1 my-4">
-                  <label
-                    htmlFor="endsAt"
-                    className="block text-sm leading-6 text-black"
-                  >
-                    Auction End Time
-                  </label>
-                  <input
-                    type="datetime-local" // Use datetime-local input for date and time
-                    id="endsAt"
-                    name="endsAt"
-                    required
-                    className="border border-gray-300 dark:text-white dark:bg-gray-700 dark:border-gray-600 p-2 rounded-3xl"
-                  />
-                </div>
-
-                <div className="flex flex-col gap-1 mt-2 mb-4">
-                  <label
-                    htmlFor="imageUrl"
-                    className="block text-sm leading-6 text-black"
-                  >
-                    Upload Image (Optional)
-                  </label>
-                  <input
-                    type="url"
-                    id="imageUrl"
-                    name="imageUrl"
-                    className="border border-gray-300 dark:text-white dark:bg-gray-700 dark:border-gray-600 p-2 rounded-3xl"
-                  />
-                </div>
-                {/* FOOTER */}
-                <div className="flex flex-col gap-4 p-6">
-                  <button
-                    type="submit"
-                    className="w-full p-4 bg-gradient-to-b from-blue-600 to-blue-500 text-white font-semibold rounded-md transition duration-200 ease-in-out hover:opacity-80"
-                  >
-                    Next
-                  </button>
-                </div>
+                {bodyContent}
               </div>
             </div>
           </div>

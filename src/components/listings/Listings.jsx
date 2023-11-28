@@ -10,21 +10,22 @@ function Listings() {
     const fetchData = async () => {
       try {
         const data = await fetchAllListings();
-        // Sort the listings based on the created property in descending order
-        const sortedListings = data.sort((a, b) => new Date(b.created) - new Date(a.created));
-        setListings(sortedListings);
+        console.log('Fetched data:', data); // Log the fetched data for debugging
+  
+        // You can directly set the listings without sorting
+        setListings(data.slice(0, 20));
       } catch (error) {
-        console.error(error);
+        console.error('Error fetching listings:', error);
       }
     };
-
+  
     fetchData();
   }, []);
 
   return (
     <main className="container mx-auto lg:px-20 mt-4">
       <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-4">
-        {listings.slice(0, 10).map(({ id, title, media, _count, endsAt }) => (
+        {listings.map(({ id, title, media, _count, endsAt }) => (
           <div key={id} className="listing-item">
             <div className="aspect-square w-full relative overflow-hidden rounded-xl">
               <img

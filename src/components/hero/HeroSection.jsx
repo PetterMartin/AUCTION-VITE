@@ -23,7 +23,7 @@ const HeroSection = () => {
 
       <FeatureSection />
 
-      <div className="lg:px-40 px-6 mt-20">
+      <div className="lg:px-40 px-6 mt-20 mb-6">
         <div className="flex sm:items-center justify-center gap-56">
           <p className="mb-2 sm:mb-0 hidden md:block">Home / Product details</p>
           <h1 className="text-2xl text-gray-800 sm:text-4xl font-semibold">

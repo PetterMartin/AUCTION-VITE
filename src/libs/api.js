@@ -31,10 +31,24 @@ export default function fetcher(url, options) {
  */
 export async function fetchAllListings() {
   try {
-    const res = await fetch(`${apiUrl}/listings`);
-    return res.json();
-  } catch (err) {
-    console.error(err);
+    const response = await fetch(`${apiUrl}/listings?sort=created&sortOrder=desc`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        // Add any additional headers if needed
+      },
+    });
+
+    // Check if the response status is OK (200)
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error(`Failed to fetch listings. Status: ${response.status}`);
+    }
+  } catch (error) {
+    // Handle fetch errors
+    console.error('Error fetching listings:', error);
   }
 }
 
