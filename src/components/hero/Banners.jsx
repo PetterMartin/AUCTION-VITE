@@ -7,8 +7,8 @@ import RegisterModal from "../modal/RegisterModal";
 export default function Banners() {
   const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
   return (
-    <div className="mx-auto px-4 sm:px-6 lg:px-8 mt-6 max-w-screen-xl">
-      <div className="relative w-full hidden md:block bg-gradient-to-b from-emerald-500 to-emerald-400 py-8 px-24 rounded-2xl">
+    <div className="mx-auto px-4 sm:px-6 lg:px-8 mt-6 max-w-screen-xl hidden md:block">
+      <div className="relative w-full bg-gradient-to-b from-emerald-500 to-emerald-400 py-8 px-24 rounded-2xl">
         <div className="flex justify-between items-center text-white text-2xl">
           <div>
             <p className="text-lg font-light">Limited-Time Offer</p>

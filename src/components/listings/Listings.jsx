@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchAllListings } from "../../libs/api";
-import user from "../../assets/user.png";
+import NoImage from "../../assets/No-Image.png";
 import HeartButton from "../buttons/HeartButton";
 
 function Listings() {
@@ -29,7 +29,7 @@ function Listings() {
           <div key={id} className="listing-item">
             <div className="aspect-square w-full relative overflow-hidden rounded-xl">
               <img
-                src={media[0] ? media[0] : user}
+                src={media[0] ? media[0] : NoImage}
                 alt="Listing Image"
                 className="object-cover w-full h-full hover:scale-110 transition"
               />

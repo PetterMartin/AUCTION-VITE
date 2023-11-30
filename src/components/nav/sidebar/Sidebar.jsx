@@ -221,7 +221,7 @@ export function SidebarItem({ icon, text, active, alert, onClick }) {
         <div
           className={`
           absolute left-full rounded-full px-4 py-2 ml-6
-          bg-gradient-to-b from-blue-600 to-blue-500 text-white text-sm
+          bg-gradient-to-b from-blue-600 to-blue-500 text-white text-sm font-bold
           invisible opacity-20 -translate-x-3 transition-all
           group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 z-30
       `}

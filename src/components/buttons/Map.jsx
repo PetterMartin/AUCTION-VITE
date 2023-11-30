@@ -18,7 +18,7 @@ export default function Map({ center }) {
         center={center || [51, -0.09]}
         zoom={center ? 4 : 2}
         scrollWheelZoom={false}
-        className="h-[50vh] rounded-2xl mt-8 border-4 border-blue-400"
+        className="h-[35vh] rounded-2xl mt-8 border-4 border-blue-400"
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

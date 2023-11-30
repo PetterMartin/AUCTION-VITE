@@ -5,8 +5,10 @@ import { FaTshirt, FaWineGlass, FaMobileAlt, FaLaptop } from "react-icons/fa";
 import { GiSofa } from "react-icons/gi";
 import { PiHouseBold } from "react-icons/pi";
 import { TbPhotoPlus } from "react-icons/tb";
+import { IoAddCircle } from "react-icons/io5";
 import CountrySelect from "../buttons/CountrySelect";
 import Map from "../buttons/Map";
+import NoImage from "../../assets/No-Image.png";
 
 const categories = [
   "Electronics",
@@ -41,6 +43,9 @@ const currentStep = STEPS.CATEGORY;
 export default function CreatePostModal({ isModalOpen, setModalOpen }) {
   const [step, setStep] = useState(STEPS.CATEGORY);
   const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
 
   const closeModal = () => {
     setModalOpen(false);
@@ -66,7 +71,7 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
     event.preventDefault();
 
     const form = event.target;
-    let formTitle, body, imageUrl, endsAt;
+    let formTitle, description, imageUrl, endsAt;
 
     switch (step) {
       case STEPS.CATEGORY:
@@ -74,16 +79,16 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
         break;
 
       case STEPS.IMAGES:
-        imageUrl = form.elements.imageUrl.value;
         break;
 
       case STEPS.DESCRIPTION:
-        body = form.elements.body.value;
         break;
 
       case STEPS.TIME:
         formTitle = form.elements.title.value;
+        imageUrl = form.elements.imageUrl.value;
         endsAt = form.elements.endsAt.value;
+        description = form.elements.body.value;
         break;
 
       default:
@@ -98,7 +103,7 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
 
     const newListing = {
       title: formTitle || "",
-      description: body || "",
+      description: description || "",
       media: imageUrl ? [imageUrl] : [],
       endsAt: endsAt || "",
     };
@@ -152,7 +157,7 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
             Which of these best describe your product?
           </div>
           <div className="font-light text-neutral-500 mt-2 mb-6">
-            Pick a category
+            Pick a category (Optional)
           </div>
         </div>
 
@@ -234,18 +239,53 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
                 Take an appealing photo to attract buyers!
               </div>
             </div>
-            <div className="flex flex-col gap-1 mt-2 mb-4">
-              <label
-                htmlFor="imageUrl"
-                className="block text-sm leading-6 text-black"
-              >
-                Upload Image (Optional)
-              </label>
-              <input
-                type="url"
-                id="imageUrl"
-                name="imageUrl"
-                className="border border-gray-300 dark:text-white dark:bg-gray-700 dark:border-gray-600 p-2 rounded-3xl"
+            <div className="flex">
+              <div className="w-full relative mb-6">
+                <input
+                  type="url"
+                  id="imageUrl"
+                  name="imageUrl"
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                  placeholder={isFocused ? "Image URL goes here" : ""}
+                  className={`peer w-full p-4 pt-6 font-light border-2 rounded-md outline-none transition hover:border-blue-400 focus:border-blue-400 cursor-pointer`}
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => setIsFocused(false)}
+                />
+                {imageUrl && (
+                  <button
+                    type="button"
+                    className="absolute p-2 ps-8 right-4 top-1/2 transform -translate-y-1/2 bg-white text-gray-400 hover:text-black"
+                    onClick={() => setImageUrl("")}
+                  >
+                    <AiOutlineClose size={15} />
+                  </button>
+                )}
+
+                <label
+                  htmlFor="imageUrl"
+                  className="
+                  absolute 
+                  text-md
+                  duration-150 
+                  transform 
+                  -translate-y-3 
+                  top-5 
+                  z-10 
+                  origin-[0] 
+                  left-4
+                  peer-placeholder-shown:scale-100 
+                  peer-placeholder-shown:translate-y-0 
+                  peer-focus:scale-75
+                  peer-focus:-translate-y-4
+                "
+                >
+                  Upload Image (Optional)
+                </label>
+              </div>
+              <IoAddCircle
+                size={50}
+                className="mx-2 mt-2 text-blue-500 transition duration-200 ease-in-out hover:opacity-80 cursor-pointer"
               />
             </div>
             <div className="relative cursor-pointer hover:opacity-70 transition border-dashed border-2 p-20 border-neutral-300 flex flex-col justify-center items-center gap-4 text-neutral-600">
@@ -253,7 +293,7 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
               <div className="font-semibold text-lg">Click to upload</div>
             </div>
           </div>
-          <div className="flex p-6 gap-4">
+          <div className="flex px-6 pb-6 gap-4">
             <button
               type="button"
               onClick={moveToPreviousStep}
@@ -313,16 +353,18 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
                   peer-focus:-translate-y-4
                 "
               >
-                Title
+                Title (Required)
               </label>
             </div>
 
-            <div className="flex flex-col gap-1 mt-2">
+            <div className="flex flex-col mt-2">
               <div className="w-full relative">
                 <input
                   id="body"
                   name="body"
-                  className="peer w-full p-4 h-20 font-light overflow-hidden text-sm border-2 rounded-md outline-none transition hover:border-blue-400 focus:border-blue-400 cursor-pointer"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="peer w-full p-4 h-20 font-light overflow-hidden border-2 rounded-md outline-none transition hover:border-blue-400 focus:border-blue-400 cursor-pointer"
                 />
                 <label
                   htmlFor="userId"
@@ -342,12 +384,12 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
               peer-focus:-translate-y-4
             "
                 >
-                  Description
+                  Description (Optional)
                 </label>
               </div>
             </div>
           </div>
-          <div className="flex p-6 gap-4">
+          <div className="flex px-6 pb-6 gap-4">
             <button
               type="button"
               onClick={moveToPreviousStep}
@@ -358,7 +400,10 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
             <button
               type="button"
               onClick={moveToNextStep}
-              className="w-full p-4 bg-gradient-to-b from-blue-600 to-blue-500 text-white font-semibold rounded-md transition duration-200 ease-in-out hover:opacity-80"
+              className={`w-full p-4 bg-gradient-to-b from-blue-600 to-blue-500 text-white font-semibold rounded-md transition duration-200 ease-in-out hover:opacity-80 ${
+                !title && "opacity-50 cursor-not-allowed"
+              }`}
+              disabled={!title}
             >
               Next
             </button>
@@ -371,54 +416,86 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
   if (step === STEPS.TIME) {
     bodyContent = (
       <>
-        <div className="flex flex-col gap-8">
-          <div className="relative p-6 flex-auto">
+        <div className="flex flex-col">
+          <div className="relative px-6 flex-auto">
             <div className="text-start">
-              <div className="text-2xl font-semibold">Review Your Listing</div>
-              <div className="font-light text-neutral-500 mt-2 mb-6">
+              <div className="text-2xl font-semibold mt-6">
+                Review Your Listing
+              </div>
+              <div className="font-light text-neutral-500 mt-2">
                 Take a moment to ensure everything looks just right!
               </div>
             </div>
-            <div className="w-full relative mb-6">
+            {/* Grouping the inputs into one flex container */}
+            <div className="flex flex-col items-center text-center w-full">
+              <div className="w-full relative">
+                <input
+                  id="title"
+                  name="title"
+                  required
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="py-2 text-3xl font-semibold outline-none cursor-pointer text-center"
+                />
+              </div>
               <input
-                id="title"
-                name="title"
-                required
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="peer w-full p-4 pt-6 font-light border-2 rounded-md outline-none transition hover:border-blue-400 focus:border-blue-400 cursor-pointer"
+                type="url"
+                id="imageUrl"
+                name="imageUrl"
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+                className="hidden border border-gray-300 dark:text-white dark:bg-gray-700 dark:border-gray-600 p-2 rounded-3xl"
               />
-              <label
-                className="
-                  absolute 
-                  text-md
-                  duration-150 
-                  transform 
-                  -translate-y-3 
-                  top-5 
-                  z-10 
-                  origin-[0] 
-                  left-4
-                  peer-placeholder-shown:scale-100 
-                  peer-placeholder-shown:translate-y-0 
-                  peer-focus:scale-75
-                  peer-focus:-translate-y-4
-                "
-              >
-                Title
-              </label>
+
+              {imageUrl ? (
+                <div>
+                  <p className="text-sm text-blue-500"></p>
+                  <img
+                    src={imageUrl}
+                    alt="Image Preview"
+                    className="max-w-full h-auto rounded-xl border-4 "
+                    style={{ maxWidth: "250px", maxHeight: "250px" }}
+                  />
+                </div>
+              ) : (
+                <img
+                  src={NoImage}
+                  alt="No Image"
+                  className="max-w-full h-auto rounded-xl border-4 "
+                  style={{ maxWidth: "300px", maxHeight: "300px" }}
+                />
+              )}
+              <div className="w-full relative">
+                <input
+                  id="body"
+                  name="body"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="py-2 text-xl outline-none cursor-pointer text-center"
+                />
+              </div>
             </div>
+            {/* End of grouped inputs */}
+
             <div className="flex gap-2 font-semibold p-2">
               <div className="text-xl">🌍</div>
-              <div className="mt-0.5"> {selectedCountry && selectedCountry.label}</div>
+              <div className="mt-0.5">
+                {" "}
+                {selectedCountry && selectedCountry.label}
+              </div>
             </div>
-            <input
-              type="datetime-local"
-              id="endsAt"
-              name="endsAt"
-              required
-              className="border border-gray-300 dark:text-white dark:bg-gray-700 dark:border-gray-600 p-4 rounded-3xl"
-            />
+            <div>
+              <div className="font-light text-neutral-500 my-2 text-sm">
+                Choose an expiration time and date for your listing (Required)
+              </div>
+              <input
+                type="datetime-local"
+                id="endsAt"
+                name="endsAt"
+                required
+                className="border-2 hover:border-blue-400 p-2 rounded-3xl cursor-pointer"
+              />
+            </div>
           </div>
 
           <div className="flex p-6 gap-4">
