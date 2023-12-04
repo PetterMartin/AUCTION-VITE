@@ -4,7 +4,6 @@ import { AiOutlineClose } from "react-icons/ai";
 import { FaTshirt, FaWineGlass, FaMobileAlt, FaLaptop } from "react-icons/fa";
 import { GiSofa } from "react-icons/gi";
 import { PiHouseBold } from "react-icons/pi";
-import { TbPhotoPlus } from "react-icons/tb";
 import { IoAddCircle } from "react-icons/io5";
 import CountrySelect from "../buttons/CountrySelect";
 import Map from "../buttons/Map";
@@ -37,8 +36,6 @@ const STEPS = {
   DESCRIPTION: 3,
   TIME: 4,
 };
-
-const currentStep = STEPS.CATEGORY;
 
 export default function CreatePostModal({ isModalOpen, setModalOpen }) {
   const [step, setStep] = useState(STEPS.CATEGORY);
@@ -226,17 +223,25 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
     );
   }
 
+  const [isImageVisible, setIsImageVisible] = useState(false);
+
+  const handleAddImage = () => {
+    if (imageUrl) {
+      setIsImageVisible(true);
+    }
+  };
+
   if (step === STEPS.IMAGES) {
     bodyContent = (
       <>
         <div className="flex flex-col gap-8">
           <div className="relative p-6 flex-auto">
-            <div className="text-start">
+          <div className="text-start">
               <div className="text-2xl font-semibold">
-                Add a photo of your listing
+                Take a picture of your listing
               </div>
               <div className="font-light text-neutral-500 mt-2 mb-6">
-                Take an appealing photo to attract buyers!
+                You can add more than one!
               </div>
             </div>
             <div className="flex">
@@ -252,14 +257,22 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setIsFocused(false)}
                 />
-                {imageUrl && (
-                  <button
-                    type="button"
-                    className="absolute p-2 ps-8 right-4 top-1/2 transform -translate-y-1/2 bg-white text-gray-400 hover:text-black"
-                    onClick={() => setImageUrl("")}
-                  >
-                    <AiOutlineClose size={15} />
-                  </button>
+
+                {isImageVisible && imageUrl && (
+                  <div className="relative flex items-center">
+                    <img
+                      src={imageUrl}
+                      alt="Image Preview"
+                      className="max-w-full h-auto rounded-xl border-4 mt-4 cursor-pointer"
+                      style={{ maxWidth: "250px", maxHeight: "250px" }}
+                    />
+                    <button
+                      className="ml-2 bg-white text-gray-400 hover:text-black p-1 rounded-full"
+                      onClick={() => setIsImageVisible(false)}
+                    >
+                      <AiOutlineClose size={18} />
+                    </button>
+                  </div>
                 )}
 
                 <label
@@ -286,11 +299,8 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
               <IoAddCircle
                 size={50}
                 className="mx-2 mt-2 text-blue-500 transition duration-200 ease-in-out hover:opacity-80 cursor-pointer"
+                onClick={handleAddImage}
               />
-            </div>
-            <div className="relative cursor-pointer hover:opacity-70 transition border-dashed border-2 p-20 border-neutral-300 flex flex-col justify-center items-center gap-4 text-neutral-600">
-              <TbPhotoPlus size={50} />
-              <div className="font-semibold text-lg">Click to upload</div>
             </div>
           </div>
           <div className="flex px-6 pb-6 gap-4">

@@ -1,12 +1,16 @@
 import "./App.css";
-import Home from "./pages/Home";
-import Sidebar from "./components/nav/sidebar/Sidebar";
+import { Outlet } from "@tanstack/react-router";
+import Sidebar from "./components/nav/Sidebar";
+import Mobilenav from "./components/nav/MobileNav";
 
 export default function App() {
   return (
     <>
       <Sidebar />
-      <Home />
+      <Outlet />
+      <div className="md:hidden">
+        <Mobilenav />
+      </div>
     </>
   );
 }

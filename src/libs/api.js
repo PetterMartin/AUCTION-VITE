@@ -52,14 +52,40 @@ export async function fetchAllListings() {
   }
 }
 
+export async function fetchListingById(listingId) {
+  const url = new URL(`${apiUrl}/listings/${listingId}?_bids=true&_seller=true`);
+
+  const options = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  try {
+    const response = await fetch(url, options);
+
+    if (response.ok) {
+      const data = await response.json();
+      return data; // Return the entire data object
+    } else {
+      console.error(`Failed to fetch. Status: ${response.status}`);
+    }
+  } catch (error) {
+    // Handle fetch errors
+    console.error('Error fetching listing:', error);
+  }
+}
+
 /** * Sign up user - register page */
-export async function registerUser({ email, password, username }) {
+export async function registerUser({ email, password, username, avatar }) {
   const url = new URL(`${apiUrl}/auth/register`);
 
   const userData = {
     name: username,
     email,
     password,
+    avatar,
   };
 
   const options = {
@@ -112,7 +138,7 @@ export async function loginUser(email, password) {
 }
 
 export async function getProfile(userName) {
-  const apiUser = `${apiUrl}/profiles/${userName}?_listings=true`;
+  const apiUser = `${apiUrl}/profiles/${userName}`;
   const options = {
     method: 'GET',
     headers: {
@@ -122,7 +148,7 @@ export async function getProfile(userName) {
   };
 
   try {
-    const response = await fetch(apiUser, options);
+    const response = await fetch(`${apiUser}?_listings=true`, options);
 
     if (response.ok) {
       const userProfile = await response.json();
@@ -131,10 +157,139 @@ export async function getProfile(userName) {
       throw new Error('Failed to fetch user profile. Please try again later.');
     }
   } catch (error) {
-    console.error('Error fetching user profile:', error);
     return null;
   }
 }
+
+export async function fetchProfileByName(profileName) {
+  const url = new URL(`${apiUrl}/profiles/${profileName}`);
+  
+  const options = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+    },
+  };
+
+  try {
+    const response = await fetch(url, options);
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error(`Failed to fetch profile. Status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Error fetching profile:', error);
+  }
+}
+
+
+export async function getProfileListings(userName) {
+  const apiUserListings = `${apiUrl}/profiles/${userName}/listings?sort=created&sortOrder=desc`; // Adjust the endpoint
+
+  const options = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+    },
+  };
+
+  try {
+    const response = await fetch(apiUserListings, options);
+
+    if (response.ok) {
+      const userListingData = await response.json();
+      return userListingData;
+    } else {
+      throw new Error('Failed to fetch user listings. Please try again later.');
+    }
+  } catch (error) {
+    console.error('Error fetching user listings:', error);
+    return null;
+  }
+}
+
+export async function updateProfileImage(user, imageUrl, token) {
+  const URL = `${apiUrl}/profiles/${user}/media`;
+  const response = await fetcher(URL, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ avatar: imageUrl }),
+  });
+
+  return response;
+}
+
+export async function fetchBidsForListing(listingId) {
+  const url = new URL(`${apiUrl}/listings/${listingId}/bids`);
+
+  const options = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+    },
+  };
+
+  try {
+    const response = await fetch(url, options);
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error(`Failed to fetch bids for listing. Status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Error fetching bids for listing:', error);
+  }
+}
+
+export async function submitBid(listingId, bidAmount) {
+  const url = new URL(`${apiUrl}/listings/${listingId}/bids`);
+
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+    },
+    body: JSON.stringify({
+      amount: bidAmount,
+    }),
+  };
+
+  try {
+    const response = await fetch(url, options);
+
+    // Log the entire response for debugging
+    console.log("Bid response:", response);
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      const errorData = await response.json();
+      console.error(`Failed to submit bid. Status: ${response.status}, Error: ${JSON.stringify(
+        errorData
+    )}`);
+    }
+  } catch (error) {
+    console.error('Error submitting bid:', error);
+    throw new Error(error);
+  }
+}
+
+
+
+
 
 export function logoutUser() {
   localStorage.removeItem('jwt');
@@ -142,3 +297,4 @@ export function logoutUser() {
   localStorage.removeItem('credits');
   localStorage.removeItem('avatar');
 }
+

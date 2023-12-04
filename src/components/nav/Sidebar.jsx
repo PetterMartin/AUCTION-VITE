@@ -1,19 +1,20 @@
 import { useState, useEffect, useContext, createContext } from "react";
-import { getProfile } from "../../../libs/api";
+import { Link } from "@tanstack/react-router";
+import { getProfile } from "../../libs/api";
 import { HiChatBubbleOvalLeft, HiMiniInformationCircle } from "react-icons/hi2";
-import { FaHeart } from "react-icons/fa";
+import { FaHeart, FaBitcoin } from "react-icons/fa";
 import { IoAddCircle } from "react-icons/io5";
 import { PiHouseFill } from "react-icons/pi";
 import { IoSettingsSharp } from "react-icons/io5";
 import { BiLogInCircle } from "react-icons/bi";
 import PropTypes from "prop-types";
-import logo from "../../../assets/New-Logo.svg";
-import placeholder from "../../../assets/user.png";
-import RegisterModal from "../../modal/RegisterModal";
-import LoginModal from "../../modal/LoginModal";
-import CreatePostModal from "../../modal/CreatePostModal";
-import LogoutButton from "../../buttons/LogoutButton";
-import LoginToast from "../../toast/LoginToast";
+import logo from "../../assets/New-Logo.svg";
+import placeholder from "../../assets/user.png";
+import RegisterModal from "../modal/RegisterModal";
+import LoginModal from "../modal/LoginModal";
+import CreatePostModal from "../modal/CreatePostModal";
+import LogoutButton from "../buttons/LogoutButton";
+import LoginToast from "../toast/LoginToast";
 
 const SidebarContext = createContext();
 
@@ -102,7 +103,9 @@ export default function Sidebar() {
         <SidebarContext.Provider value={{ expanded }}>
           <ul className="flex-1 px-4 text-lg">
             <div className="border-b-2 border-blue-400 mt-2 mb-8"></div>
-            <SidebarItem icon={<PiHouseFill />} text="Home" active />
+            <Link to="/">
+              <SidebarItem icon={<PiHouseFill />} text="Home" active />
+            </Link>
             {isAuthenticated && (
               <SidebarItem
                 icon={<IoAddCircle />}
@@ -123,6 +126,16 @@ export default function Sidebar() {
             <SidebarItem icon={<IoSettingsSharp />} text="Settings" />
             <SidebarItem icon={<HiMiniInformationCircle />} text="Help" />
           </ul>
+
+          <div className="px-4">
+            {isAuthenticated && (
+              <SidebarItem
+              icon={<FaBitcoin />}
+              text={`${user && user.credits}`}
+              bitcoinItem
+            />
+            )}
+          </div>
         </SidebarContext.Provider>
 
         <div className="px-4">
@@ -131,9 +144,13 @@ export default function Sidebar() {
 
         <div className="flex items-center cursor-pointer">
           <img
-            src={placeholder}
+            src={
+              isAuthenticated
+                ? (user && user.avatar) || placeholder
+                : placeholder
+            }
             alt=""
-            className="w-14 h-14 mx-3 rounded-full border-2 border-blue-300 p-1.5"
+            className="w-14 h-14 mx-3 rounded-full border-2 border-blue-500 p-1.5"
             onClick={() => setExpanded((curr) => !curr)}
           />
 
@@ -148,16 +165,20 @@ export default function Sidebar() {
           >
             <div className="w-full text-gray-00" style={{ fontSize: "16px" }}>
               {isAuthenticated ? (
-                <div className="hover:bg-gray-100/50 p-3 whitespace-nowrap text-gray-600">
-                  {user && user.name}
-                </div>
+                <Link to="/profile" style={{ color: "black" }}>
+                  <div className="hover:bg-gray-100/50 p-3 whitespace-nowrap text-gray-600">
+                    {user && user.name}
+                  </div>
+                </Link>
               ) : (
                 <div className="hover:bg-gray-100/50 p-3 whitespace-nowrap text-gray-600">
                   <div onClick={openRegisterModal}>Sign Up</div>
                 </div>
               )}
               {isAuthenticated ? (
-                <LogoutButton setUser={setUser} onLogout={handleLogout} />
+                <Link to="/">
+                  <LogoutButton setUser={setUser} onLogout={handleLogout} />
+                </Link>
               ) : (
                 <div
                   onClick={openLoginModal}
@@ -175,16 +196,18 @@ export default function Sidebar() {
   );
 }
 
-export function SidebarItem({ icon, text, active, alert, onClick }) {
+export function SidebarItem({ icon, text, active, alert, onClick, bitcoinItem }) {
   const { expanded } = useContext(SidebarContext);
 
   SidebarItem.propTypes = {
     icon: PropTypes.element,
-    text: PropTypes.string,
+    text: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     active: PropTypes.bool,
     alert: PropTypes.bool,
     onClick: PropTypes.func,
+    bitcoinItem: PropTypes.bool,
   };
+  
 
   return (
     <li
@@ -197,6 +220,7 @@ export function SidebarItem({ icon, text, active, alert, onClick }) {
             ? "bg-gradient-to-b from-blue-600 to-blue-500 text-white"
             : "hover:bg-gray-100/50 text-gray-400 hover:text-blue-500"
         }
+        ${bitcoinItem ? " text-yellow-500" : ""}
     `}
       style={{ fontSize: "20px" }}
       onClick={onClick}
@@ -232,4 +256,3 @@ export function SidebarItem({ icon, text, active, alert, onClick }) {
     </li>
   );
 }
-
