@@ -4,6 +4,7 @@ import {
   fetchProfileByName,
   submitBid,
   fetchBidsForListing,
+  loginUser,
 } from "../libs/api";
 import { RiShieldCheckFill } from "react-icons/ri";
 import HeartButton from "../components/buttons/HeartButton";
@@ -94,15 +95,28 @@ export default function Listing() {
 
   const handleBidSubmit = async () => {
     try {
+      const userAccessToken = localStorage.getItem("jwt");
+      const userId = localStorage.getItem("userId");
+
+      // Check if the user is already logged in
+      if (!userAccessToken || !userId) {
+        // If not logged in, prompt the user to log in
+        // You can customize the login logic based on your UI and requirements
+        // For example, you can redirect the user to a login page or show a modal
+        console.log(
+          "User not logged in. Redirecting to login page or showing login modal."
+        );
+        // Call the loginUser function
+        await loginUser("user@example.com", "password"); // Provide user credentials or redirect to login
+      }
+
+      // Now, the user is logged in or has just logged in
+      // You can proceed with the bid logic
+
       // Check if the bid amount is a valid number
       const parsedBidAmount = parseFloat(bidAmount);
       if (isNaN(parsedBidAmount) || parsedBidAmount <= 0) {
         console.error("Invalid bid amount. Please enter a valid number.");
-        return;
-      }
-
-      if (parsedBidAmount > profile.credits) {
-        console.error("Insufficient credits to place the bid.");
         return;
       }
 
@@ -152,7 +166,7 @@ export default function Listing() {
           <div className="font-light text-sm text-neutral-500">
             published on {formattedCreatedDate}
           </div>
-          <div className="w-full h-[60vh] overflow-hidden rounded-xl relative mt-5">
+          <div className="w-full h-[60vh] overflow-hidden rounded-xl relative mt-5 border-4">
             <img
               src={listing.media[0]}
               alt=""
@@ -202,24 +216,34 @@ export default function Listing() {
                 <div className="text-2xl font-semibold">
                   ${" "}
                   {listing._count.bids > 0
-                    ? listing.bids.reduce((total, bid) => total > bid.amount ? total:bid.amount , 0)
+                    ? listing.bids.reduce(
+                        (total, bid) =>
+                          total > bid.amount ? total : bid.amount,
+                        0
+                      )
                     : 0}
                 </div>
                 <div className="font-light text-neutral-600">current bid</div>
               </div>
-              {countdown.days === 0 ? (
-              <div className="text-md font-light text-red-500">
-                Ends in:{" "}
-                <span className="font-bold text-lg">{countdown.days} days {countdown.hours} hours {countdown.minutes} minutes {countdown.seconds} seconds</span>,{" "}
-                Hurry!
+              {/* Display the countdown or "Auction has ended" */}
+              {countdown.days === 0 &&
+              countdown.hours === 0 &&
+              countdown.minutes === 0 &&
+              countdown.seconds === 0 ? (
+                <div className="text-md font-light text-red-500">
+                  Auction has ended
                 </div>
-            ) : (
-              <div className="text-md font-light text-blue-500">
-                Ends in:{" "}
-                <span className="font-bold text-lg">{countdown.days} days {countdown.hours} hours {countdown.minutes} minutes {countdown.seconds} seconds</span>,{" "}
-              </div>
-            )}
-          </div>
+              ) : (
+                <div className="text-md font-light text-blue-500">
+                  Ends in:{" "}
+                  <span className="font-bold text-lg">
+                    {countdown.days} days {countdown.hours} hours{" "}
+                    {countdown.minutes} minutes {countdown.seconds} seconds
+                  </span>
+                  ,{" "}
+                </div>
+              )}
+            </div>
 
             {/* Bid Form */}
             <div className="flex flex-col gap-4 mt-4">

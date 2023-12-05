@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Toaster, toast } from "sonner";
 import PropTypes from "prop-types";
 import { registerUser } from "../../libs/api";
 import { AiOutlineClose, AiFillGithub } from "react-icons/ai";
@@ -58,9 +59,13 @@ const RegisterModal = ({ isModalOpen, setModalOpen }) => {
 
       // Handle successful registration (you can redirect or show a success message)
       console.log("Registration successful:", registrationData);
-      setLoginModalOpen(true);
-      setModalOpen(false);
       setRegistrationStatus("success");
+
+      toast.success("Registration successful! You may now Login", {
+        duration: 5000, // Optional, how long the toast should be displayed
+      });
+
+      closeModal(); // Close the modal upon successful registration
     } catch (error) {
       // Handle validation errors or registration failure
       console.error("Registration failed:", error.message);
@@ -144,8 +149,7 @@ const RegisterModal = ({ isModalOpen, setModalOpen }) => {
                         }
                       />
 
-                      <label
-                        className="absolute text-md duration-150 transform -translate-y-3 top-5 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">
+                      <label className="absolute text-md duration-150 transform -translate-y-3 top-5 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">
                         {label}
                       </label>
 
@@ -169,21 +173,23 @@ const RegisterModal = ({ isModalOpen, setModalOpen }) => {
                     </div>
                   ))}
 
-                  {registrationStatus === "success" ? (
+                  {registrationStatus === "success" && (
                     // Render success message or redirect
                     <p>Registration successful! Redirecting...</p>
-                  ) : registrationStatus === "error" ? (
+                  )}
+
+                  {registrationStatus === "error" && (
                     // Render error message
                     <p>Registration failed. Please try again.</p>
-                  ) : (
-                    // Render registration form
-                    <button
-                      className="w-full p-4 bg-gradient-to-b from-blue-600 to-blue-500 text-white font-semibold rounded-md transition duration-200 ease-in-out hover:opacity-80"
-                      onClick={handleRegistration}
-                    >
-                      Continue
-                    </button>
                   )}
+
+                  {/* Always render the registration form */}
+                  <button
+                    className="w-full p-4 bg-gradient-to-b from-blue-600 to-blue-500 text-white font-semibold rounded-md transition duration-200 ease-in-out hover:opacity-80"
+                    onClick={handleRegistration}
+                  >
+                    Continue
+                  </button>
                 </div>
                 {/* FOOTER */}
                 <div className="flex flex-col gap-4 p-6">

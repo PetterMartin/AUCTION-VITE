@@ -1,3 +1,4 @@
+import { Toaster, toast } from "sonner";
 import { logoutUser } from "../../libs/api";
 import { useAuth } from "../AuthContext";
 import PropTypes from "prop-types";
@@ -17,13 +18,17 @@ export default function LogoutButton({ setUser }) {
     // Reset the user state to null to ensure it reflects immediately in the UI
     setUser(null);
 
+    toast("You have successfully Logged out", {
+      duration: 5000, // Optional, how long the toast should be displayed
+    });
+
     // Call your logoutUser function from the api.js
     logoutUser();
-    window.alert("You have been logged out.");
   };
 
   return (
     <>
+    <Toaster />
       <button
         onClick={handleLogout}
         className="flex gap-4 w-full logout-button hover:bg-gray-100/50 p-3 whitespace-nowrap text-red-500"

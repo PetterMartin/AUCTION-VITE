@@ -48,12 +48,9 @@ const LoginModal = ({ isModalOpen, setModalOpen }) => {
         login(loginData);
 
         // Set the user ID and access token separately
-        localStorage.setItem("userId", loginData.userId);
         localStorage.setItem("jwt", loginData.accessToken);
         localStorage.setItem("user_name", loginData.name);
 
-        // Set the isLoggedIn flag to true
-        localStorage.setItem("isLoggedIn", true);
 
         setLoginStatus("success");
         setModalOpen(false);

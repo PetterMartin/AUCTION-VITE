@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react";
+import logoutFunction from "../libs/api"
 
 const AuthContext = createContext();
 
@@ -10,7 +11,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    setUser(null);
+    (logoutFunction);
   };
 
   return (

@@ -7,6 +7,7 @@ import { IoAddCircle } from "react-icons/io5";
 import { PiHouseFill } from "react-icons/pi";
 import { IoSettingsSharp } from "react-icons/io5";
 import { BiLogInCircle } from "react-icons/bi";
+import { useAuth } from "../AuthContext";
 import PropTypes from "prop-types";
 import logo from "../../assets/New-Logo.svg";
 import placeholder from "../../assets/user.png";
@@ -24,7 +25,8 @@ export default function Sidebar() {
   const [user, setUser] = useState(null);
   const [creditInfo, setCreditInfo] = useState({});
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLogout, setIsLogout] = useState(false);
+
+  const auth = useAuth();
 
   const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
   const openRegisterModal = () => {
@@ -42,7 +44,7 @@ export default function Sidebar() {
   };
 
   const handleLogout = () => {
-    setIsLogout(true);
+    auth.logout(); // Use the logout function from the useAuth hook
   };
 
   useEffect(() => {
