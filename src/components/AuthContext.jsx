@@ -11,7 +11,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    (logoutFunction);
+    logoutFunction();
+    setUser(null);
   };
 
   return (

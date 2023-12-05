@@ -274,12 +274,11 @@ export async function submitBid(listingId, bidAmount) {
 
     if (response.ok) {
       const data = await response.json();
-      return data;
+      return { ok: true, data }; // Return an object with 'ok' flag and data
     } else {
       const errorData = await response.json();
-      console.error(`Failed to submit bid. Status: ${response.status}, Error: ${JSON.stringify(
-        errorData
-    )}`);
+      console.error(`Failed to submit bid. Status: ${response.status}, Error: ${JSON.stringify(errorData)}`);
+      return { ok: false, error: errorData }; // Return an object with 'ok' flag and error data
     }
   } catch (error) {
     console.error('Error submitting bid:', error);

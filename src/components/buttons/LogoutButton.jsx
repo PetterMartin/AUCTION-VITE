@@ -28,7 +28,6 @@ export default function LogoutButton({ setUser }) {
 
   return (
     <>
-    <Toaster />
       <button
         onClick={handleLogout}
         className="flex gap-4 w-full logout-button hover:bg-gray-100/50 p-3 whitespace-nowrap text-red-500"

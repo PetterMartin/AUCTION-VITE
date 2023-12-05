@@ -1,22 +1,24 @@
 import { useEffect, useState } from "react";
-import {
-  fetchListingById,
-  fetchProfileByName,
-  submitBid,
-  fetchBidsForListing,
-  loginUser,
-} from "../libs/api";
+import { fetchListingById, fetchProfileByName, submitBid } from "../libs/api";
+import { Toaster, toast } from "sonner";
 import { RiShieldCheckFill } from "react-icons/ri";
 import HeartButton from "../components/buttons/HeartButton";
 import Map from "../components/buttons/Map";
 
 export default function Listing() {
   const [listing, setListing] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(0);
   const [profile, setProfile] = useState(null);
   const [countdown, setCountdown] = useState(null);
   const [formattedCreatedDate, setFormattedCreatedDate] = useState(null);
   const [bidAmount, setBidAmount] = useState("");
-  const [bids, setBids] = useState([]);
+
+  const handleImageClick = (index) => {
+    const temp = listing.media[0];
+    listing.media[0] = listing.media[index];
+    listing.media[index] = temp;
+    setSelectedImage(index);
+  };
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -95,24 +97,6 @@ export default function Listing() {
 
   const handleBidSubmit = async () => {
     try {
-      const userAccessToken = localStorage.getItem("jwt");
-      const userId = localStorage.getItem("userId");
-
-      // Check if the user is already logged in
-      if (!userAccessToken || !userId) {
-        // If not logged in, prompt the user to log in
-        // You can customize the login logic based on your UI and requirements
-        // For example, you can redirect the user to a login page or show a modal
-        console.log(
-          "User not logged in. Redirecting to login page or showing login modal."
-        );
-        // Call the loginUser function
-        await loginUser("user@example.com", "password"); // Provide user credentials or redirect to login
-      }
-
-      // Now, the user is logged in or has just logged in
-      // You can proceed with the bid logic
-
       // Check if the bid amount is a valid number
       const parsedBidAmount = parseFloat(bidAmount);
       if (isNaN(parsedBidAmount) || parsedBidAmount <= 0) {
@@ -121,8 +105,6 @@ export default function Listing() {
       }
 
       const currentBidAmount = listing._count.bids;
-      console.log("Parsed Bid Amount:", parsedBidAmount);
-      console.log("Current Bid Amount:", currentBidAmount);
 
       if (parsedBidAmount <= currentBidAmount) {
         console.error("Your bid must be higher than the current bid.");
@@ -132,20 +114,23 @@ export default function Listing() {
       const bidResponse = await submitBid(listing.id, parsedBidAmount);
 
       if (bidResponse.ok) {
-        console.log("Bid submitted successfully:", bidResponse);
+        console.log("Bid submitted successfully:", bidResponse.data);
 
-        const updatedBidsData = await fetchBidsForListing(listing.id);
-        setBids(updatedBidsData);
+        // Fetch the updated listing information after a successful bid
+        const updatedListingData = await fetchListingById(listing.id);
+        setListing(updatedListingData);
+
+        toast.success(`You successfully bid $${parsedBidAmount}`, {
+          duration: 5000,
+        });
       } else {
-        console.error("Error submitting bid:", bidResponse);
+        console.error("Error submitting bid:", bidResponse.error);
       }
 
       // Clear the bid amount after submission
-      setBidAmount(0);
+      setBidAmount("");
     } catch (error) {
       console.error("Error submitting bid:", error);
-      // Handle unexpected errors, e.g., network issues
-      // Example: showErrorMessage("An unexpected error occurred. Please try again.");
     } finally {
       // Hide loading state after bid submission completes
       // Example: setSubmitting(false);
@@ -166,17 +151,38 @@ export default function Listing() {
           <div className="font-light text-sm text-neutral-500">
             published on {formattedCreatedDate}
           </div>
-          <div className="w-full h-[60vh] overflow-hidden rounded-xl relative mt-5 border-4">
-            <img
-              src={listing.media[0]}
-              alt=""
-              className="object-cover w-full h-full"
-            />
-            <div className="absolute top-5 right-5">
-              <HeartButton />
+
+          <div className="flex gap-4">
+            <div className="w-full h-[60vh] overflow-hidden rounded-xl relative mt-5 border-4">
+              <img
+                src={listing.media[0]}
+                alt=""
+                className="object-cover w-full h-full"
+              />
+              <div className="absolute top-5 right-5">
+                <HeartButton />
+              </div>
             </div>
+            {listing.media.length > 1 && (
+        <div className="md:w-1/4 flex flex-col gap-4 mt-8">
+          {listing.media.slice(1, 5).map((imageSrc, index) => (
+            <div
+              key={index}
+              className="w-full h-28 border-4 border-gray-300 rounded-xl transition duration-200 ease-in-out transform hover:border-blue-400"
+              onClick={() => handleImageClick(index + 1)}
+            >
+              <img
+                src={imageSrc}
+                alt=""
+                className="object-cover w-full h-full rounded-md cursor-pointer"
+              />
+            </div>
+          ))}
+              </div>
+            )}
           </div>
         </div>
+
         <div className="grid md:grid-cols-8 md:gap-10 mt-6">
           {/* Left Side */}
           <div className="col-span-4 flex flex-col gap-5">
