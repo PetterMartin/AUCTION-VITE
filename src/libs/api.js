@@ -29,9 +29,9 @@ export default function fetcher(url, options) {
 /** 
  * Fetch all listings
  */
-export async function fetchAllListings(searchQuery = "") {
+export async function fetchAllListings() {
   try {
-    const response = await fetch(`${apiUrl}/listings?sort=created&sortOrder=desc&search=${searchQuery}`, {
+    const response = await fetch(`${apiUrl}/listings?sort=created&sortOrder=desc`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -39,6 +39,7 @@ export async function fetchAllListings(searchQuery = "") {
       },
     });
 
+    // Check if the response status is OK (200)
     if (response.ok) {
       const data = await response.json();
       return data;
@@ -46,6 +47,7 @@ export async function fetchAllListings(searchQuery = "") {
       console.error(`Failed to fetch listings. Status: ${response.status}`);
     }
   } catch (error) {
+    // Handle fetch errors
     console.error('Error fetching listings:', error);
   }
 }

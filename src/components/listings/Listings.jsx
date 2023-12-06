@@ -11,15 +11,20 @@ function Listings({ searchQuery }) {
     const fetchData = async () => {
       try {
         const data = await fetchAllListings();
-        console.log('Fetched data:', data); // Log the fetched data for debugging
-  
-        // You can directly set the listings without sorting
-        setListings(data.slice(0, 20));
+        console.log('Fetched data:', data);
+
+        // Filter listings based on searchQuery
+        const filteredListings = data.filter(listing =>
+          listing.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (listing.description && listing.description.toLowerCase().includes(searchQuery.toLowerCase()))
+        );
+
+        setListings(filteredListings.slice(0, 20));
       } catch (error) {
         console.error('Error fetching listings:', error);
       }
     };
-  
+
     fetchData();
   }, [searchQuery]);
 
