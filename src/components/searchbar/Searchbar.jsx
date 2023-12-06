@@ -1,11 +1,21 @@
 import React, { useState } from "react";
 import { CiSearch } from "react-icons/ci";
 
-export default function Searchbar({}) {
+export default function Searchbar({ onSearch }) {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
 
   const toggleDropdown = () => {
     setDropdownVisible(!isDropdownVisible);
+  };
+
+  const handleInputChange = (event) => {
+    const query = event.target.value;
+    onSearch(query);
+  };
+
+  const handleSearch = () => {
+    onSearch(searchQuery);
+    setDropdownVisible(false); // Hide dropdown after search
   };
 
   return (
@@ -18,11 +28,13 @@ export default function Searchbar({}) {
           type="text"
           placeholder="Search Listings"
           className="bg-transparent outline-none flex-grow py-2"
+          onChange={handleInputChange}
         />
         <button
           className="bg-gradient-to-b from-blue-600 to-blue-500 rounded-r bg-primary px-4 py-2.5 font-medium uppercase leading-tight text-white shadow-md hover:bg-primary-700 hover:shadow-lg focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg"
           type="button"
           id="button-addon1"
+          onClick={handleSearch}
         >
           <CiSearch className="h-6 w-6" style={{ strokeWidth: 1 }}/>
         </button>

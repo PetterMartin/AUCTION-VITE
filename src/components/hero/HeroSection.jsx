@@ -1,3 +1,4 @@
+import { useState } from "react";
 import MobileHeader from "../nav/MobileHeader"
 import Searchbar from "../searchbar/Searchbar";
 import Banners from "./Banners";
@@ -6,6 +7,11 @@ import FeatureSection from "./FeatureSection";
 import Categories from "./Categories";
 
 const HeroSection = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+  };
 
   return (
     <div className="w-full px-2 relative bg-white">
@@ -14,7 +20,8 @@ const HeroSection = () => {
 
         <hr className="my-4 border-t-2 border-blue-400 xl:hidden" />
 
-        <Searchbar />
+        <Searchbar onSearch={handleSearch} />
+
 
         <Categories />
       </div>
@@ -35,7 +42,7 @@ const HeroSection = () => {
         </div>
       </div>
 
-      <Listings />
+      <Listings searchQuery={searchQuery} />
     </div>
   );
 };

@@ -7,7 +7,6 @@ import RegisterModal from "../modal/RegisterModal";
 
 export default function Banners() {
   const { isAuthenticated } = useAuth();
-  console.log(isAuthenticated)
   const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
 
   return (

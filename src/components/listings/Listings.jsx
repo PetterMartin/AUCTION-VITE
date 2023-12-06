@@ -4,7 +4,7 @@ import { fetchAllListings } from "../../libs/api";
 import NoImage from "../../assets/No-Image.png";
 import HeartButton from "../buttons/HeartButton";
 
-function Listings() {
+function Listings({ searchQuery }) {
   const [listings, setListings] = useState([]);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ function Listings() {
     };
   
     fetchData();
-  }, []);
+  }, [searchQuery]);
 
   return (
     <main className="container mx-auto lg:px-20 mt-4">
