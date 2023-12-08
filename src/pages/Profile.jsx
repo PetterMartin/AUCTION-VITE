@@ -105,7 +105,7 @@ export default function Profile() {
             Listings: {user && user._count.listings}
           </p>
           <h2 className="text-2xl font-semibold mt-4 text-emerald-400">
-            Funds: $ {user && user.credits}
+            $ {user && user.credits}
           </h2>
         </div>
       </div>

@@ -41,7 +41,6 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
   const [step, setStep] = useState(STEPS.CATEGORY);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
   const closeModal = () => {
@@ -68,7 +67,7 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
     event.preventDefault();
 
     const form = event.target;
-    let formTitle, description, imageUrl, endsAt;
+    let formTitle, description, endsAt;
 
     switch (step) {
       case STEPS.CATEGORY:
@@ -83,7 +82,6 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
 
       case STEPS.TIME:
         formTitle = form.elements.title.value;
-        imageUrl = form.elements.imageUrl.value;
         endsAt = form.elements.endsAt.value;
         description = form.elements.body.value;
         break;
@@ -101,7 +99,7 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
     const newListing = {
       title: formTitle || "",
       description: description || "",
-      media: imageUrl ? [imageUrl] : [],
+      media: imageUrls,
       endsAt: endsAt || "",
     };
 
@@ -223,20 +221,28 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
     );
   }
 
-  const [isImageVisible, setIsImageVisible] = useState(false);
+  const [imageUrl, setImageUrl] = useState("");
+  const [imageUrls, setImageUrls] = useState([]);
 
   const handleAddImage = () => {
     if (imageUrl) {
-      setIsImageVisible(true);
+      setImageUrls([...imageUrls, imageUrl]);
+      setImageUrl("");
     }
+  };
+
+  const handleRemoveImage = (index) => {
+    const newImageUrls = [...imageUrls];
+    newImageUrls.splice(index, 1);
+    setImageUrls(newImageUrls);
   };
 
   if (step === STEPS.IMAGES) {
     bodyContent = (
       <>
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col">
           <div className="relative p-6 flex-auto">
-          <div className="text-start">
+            <div className="text-start">
               <div className="text-2xl font-semibold">
                 Take a picture of your listing
               </div>
@@ -245,7 +251,7 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
               </div>
             </div>
             <div className="flex">
-              <div className="w-full relative mb-6">
+              <div className="w-full relative">
                 <input
                   type="url"
                   id="imageUrl"
@@ -258,22 +264,27 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
                   onBlur={() => setIsFocused(false)}
                 />
 
-                {isImageVisible && imageUrl && (
-                  <div className="relative flex items-center">
-                    <img
-                      src={imageUrl}
-                      alt="Image Preview"
-                      className="max-w-full h-auto rounded-xl border-4 mt-4 cursor-pointer"
-                      style={{ maxWidth: "250px", maxHeight: "250px" }}
-                    />
-                    <button
-                      className="ml-2 bg-white text-gray-400 hover:text-black p-1 rounded-full"
-                      onClick={() => setIsImageVisible(false)}
+                <div className="flex flex-wrap mt-2">
+                  {imageUrls.map((url, index) => (
+                    <div
+                      key={index}
+                      className="relative flex items-center w-1/2 mb-4"
                     >
-                      <AiOutlineClose size={18} />
-                    </button>
-                  </div>
-                )}
+                      <img
+                        src={url}
+                        alt={`Image Preview ${index + 1}`}
+                        className="max-w-full h-auto rounded-xl border-4 cursor-pointer"
+                        style={{ maxWidth: "220px", maxHeight: "220px" }}
+                      />
+                      <button
+                        className="ml-2 bg-white text-gray-400 hover:text-black p-1 rounded-full"
+                        onClick={() => handleRemoveImage(index)}
+                      >
+                        <AiOutlineClose size={18} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
 
                 <label
                   htmlFor="imageUrl"
@@ -457,24 +468,23 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
                 className="hidden border border-gray-300 dark:text-white dark:bg-gray-700 dark:border-gray-600 p-2 rounded-3xl"
               />
 
-              {imageUrl ? (
-                <div>
-                  <p className="text-sm text-blue-500"></p>
+              {imageUrls.length > 0 && (
+                <div className="relative flex items-center">
                   <img
-                    src={imageUrl}
-                    alt="Image Preview"
-                    className="max-w-full h-auto rounded-xl border-4 "
+                    src={imageUrls[0]}
+                    alt="Main Image Preview"
+                    className="max-w-full h-auto rounded-xl border-4 cursor-pointer"
                     style={{ maxWidth: "250px", maxHeight: "250px" }}
                   />
+                  <button
+                    className="ml-2 bg-white text-gray-400 hover:text-black p-1 rounded-full"
+                    onClick={() => handleRemoveImage(0)}
+                  >
+                    <AiOutlineClose size={18} />
+                  </button>
                 </div>
-              ) : (
-                <img
-                  src={NoImage}
-                  alt="No Image"
-                  className="max-w-full h-auto rounded-xl border-4 "
-                  style={{ maxWidth: "300px", maxHeight: "300px" }}
-                />
               )}
+
               <div className="w-full relative">
                 <input
                   id="body"
@@ -490,7 +500,6 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
             <div className="flex gap-2 font-semibold p-2">
               <div className="text-xl">🌍</div>
               <div className="mt-0.5">
-                {" "}
                 {selectedCountry && selectedCountry.label}
               </div>
             </div>
@@ -508,7 +517,7 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
             </div>
           </div>
 
-          <div className="flex p-6 gap-4">
+          <div className="flex px-6 pb-6 gap-4">
             <button
               type="button"
               onClick={moveToPreviousStep}
