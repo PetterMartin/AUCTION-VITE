@@ -8,6 +8,7 @@ import NoImage from "../../assets/No-Image.png";
 function UsersListings() {
   const userId = localStorage.getItem("user_name");
   const [listings, setListings] = useState([]);
+  const [currentListing, setCurrentListing] = useState(null);
 
   useEffect(() => {
     const fetchUserListings = async () => {
@@ -25,9 +26,11 @@ function UsersListings() {
   }, [userId]);
 
   const [isEditModalOpen, setEditModalOpen] = useState(false);
-  const openEditModal = () => {
+  const openEditModal = (listing) => {
+    setCurrentListing(listing);
     setEditModalOpen(true);
   };
+  
 
   return (
     <main className="container mx-auto lg:px-20 mt-4">
@@ -42,7 +45,16 @@ function UsersListings() {
               />
               <div
                 className="flex absolute top-0 left-0 z-10 gap-2 font-semibold bg-white text-blue-500 py-2 px-4 rounded-br-xl hover:rounded-tl-xl hover:bg-gray-100 cursor-pointer"
-                onClick={openEditModal}
+                onClick={() =>
+                  openEditModal({
+                    id,
+                    title,
+                    description,
+                    media,
+                    _count,
+                    endsAt,
+                  })
+                }
               >
                 Edit <FaEdit size={15} className="mt-0.5" />
               </div>
@@ -73,9 +85,12 @@ function UsersListings() {
         ))}
       </div>
       <EditModal
-        isModalOpen={isEditModalOpen}
-        setModalOpen={setEditModalOpen}
-      />
+  isModalOpen={isEditModalOpen}
+  setModalOpen={setEditModalOpen}
+  currentListing={currentListing}
+  setListings={setListings}
+  title={currentListing?.title}
+/>
     </main>
   );
 }

@@ -77,6 +77,69 @@ export async function fetchListingById(listingId) {
   }
 }
 
+export async function updateListing(listingId, { title, description, tags, media }) {
+  const url = new URL(`${apiUrl}/listings/${listingId}`);
+
+  const options = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+    },
+    body: JSON.stringify({
+      title,
+      description,
+      tags,
+      media,
+    }),
+  };
+
+  try {
+    const response = await fetch(url, options);
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error(`Failed to update listing. Status: ${response.status}`);
+      return null; // Explicitly return null when the update fails
+    }
+  } catch (error) {
+    console.error('Error updating listing:', error);
+    return null; // Explicitly return null when there's an error
+  }
+}
+
+export async function deleteListing(listingId) {
+  const url = new URL(`${apiUrl}/listings/${listingId}`);
+
+  const options = {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+    },
+  };
+
+  try {
+    const response = await fetch(url, options);
+
+    if (response.ok) {
+      console.log(`Listing with ID ${listingId} deleted successfully`);
+      // Optionally return some data from the response if needed
+      const data = await response.json();
+      return data;
+    } else {
+      console.error(`Failed to delete listing. Status: ${response.status}`);
+      return null;
+    }
+  } catch (error) {
+    console.error('Error deleting listing:', error);
+    return null;
+  }
+}
+
+
 /** * Sign up user - register page */
 export async function registerUser({ email, password, username, avatar }) {
   const url = new URL(`${apiUrl}/auth/register`);
