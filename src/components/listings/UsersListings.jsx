@@ -30,7 +30,6 @@ function UsersListings() {
     setCurrentListing(listing);
     setEditModalOpen(true);
   };
-  
 
   return (
     <main className="container mx-auto lg:px-20 mt-4">
@@ -44,7 +43,7 @@ function UsersListings() {
                 className="object-cover w-full h-full hover:scale-110 transition"
               />
               <div
-                className="flex absolute top-0 left-0 z-10 gap-2 font-semibold bg-white text-blue-500 py-2 px-4 rounded-br-xl hover:rounded-tl-xl hover:bg-gray-100 cursor-pointer"
+                className="flex absolute top-0 left-4 z-10 gap-2 font-semibold bg-white text-blue-500 py-2 px-4 rounded-b-xl hover:bg-gray-100 cursor-pointer"
                 onClick={() =>
                   openEditModal({
                     id,
@@ -85,12 +84,14 @@ function UsersListings() {
         ))}
       </div>
       <EditModal
-  isModalOpen={isEditModalOpen}
-  setModalOpen={setEditModalOpen}
-  currentListing={currentListing}
-  setListings={setListings}
-  title={currentListing?.title}
-/>
+        isModalOpen={isEditModalOpen}
+        setModalOpen={setEditModalOpen}
+        currentListing={currentListing}
+        setListings={setListings}
+        title={currentListing?.title}
+        description={currentListing?.description}
+        media={currentListing?.media}
+      />
     </main>
   );
 }

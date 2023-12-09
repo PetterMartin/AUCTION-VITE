@@ -4,6 +4,7 @@ import { Toaster, toast } from "sonner";
 import { RiShieldCheckFill } from "react-icons/ri";
 import HeartButton from "../components/buttons/HeartButton";
 import Map from "../components/buttons/Map";
+import defaultImage from "../assets/defaultUser.png"
 
 export default function Listing() {
   const [listing, setListing] = useState(null);
@@ -189,7 +190,7 @@ export default function Listing() {
             <div className="flex flex-col gap-1">
               <div className="text-xl font-semibold flex flex-row items-center gap-3">
                 <img
-                  src={profile.avatar}
+                  src={profile.avatar || defaultImage}
                   alt={`${profile.name}'s Avatar`}
                   style={{
                     width: "60px",
