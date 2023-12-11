@@ -22,8 +22,6 @@ const HeroSection = () => {
       <div className="lg:px-56 sm:px-28">
         <MobileHeader />
 
-        <hr className="my-4 border-t-2 border-blue-400 xl:hidden" />
-
         <Searchbar onSearch={handleSearch} onHomeClick={handleHomeClick} />
 
         <Categories />

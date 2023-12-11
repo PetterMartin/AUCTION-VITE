@@ -100,7 +100,7 @@ const LoginModal = ({ isModalOpen, setModalOpen }) => {
                     <div className="font-light text-neutral-500 mt-2 mb-6">
                       Login to your account
                     </div>
-                    <p>hamster@stud.noroff.no</p>
+                    <p>godzilla@stud.noroff.no</p>
                   </div>
 
                   {labels.map((label, index) => (

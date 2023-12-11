@@ -31,7 +31,7 @@ export default function fetcher(url, options) {
  */
 export async function fetchAllListings() {
   try {
-    const response = await fetch(`${apiUrl}/listings?sort=created&sortOrder=desc`, {
+    const response = await fetch(`${apiUrl}/listings?sort=created&sortOrder=desc&_bids=true`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -251,7 +251,7 @@ export async function fetchProfileByName(profileName) {
 
 
 export async function getProfileListings(userName) {
-  const apiUserListings = `${apiUrl}/profiles/${userName}/listings?sort=created&sortOrder=desc`; // Adjust the endpoint
+  const apiUserListings = `${apiUrl}/profiles/${userName}/listings?sort=created&sortOrder=desc&_bids=true`; // Adjust the endpoint
 
   const options = {
     method: 'GET',

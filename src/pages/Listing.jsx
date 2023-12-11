@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { fetchListingById, fetchProfileByName, submitBid } from "../libs/api";
 import { Toaster, toast } from "sonner";
+import { FaBitcoin } from "react-icons/fa";
 import { RiShieldCheckFill } from "react-icons/ri";
+import { GrHistory } from "react-icons/gr";
 import HeartButton from "../components/buttons/HeartButton";
 import Map from "../components/buttons/Map";
-import defaultImage from "../assets/defaultUser.png"
+import defaultImage from "../assets/defaultUser.png";
 
 export default function Listing() {
   const [listing, setListing] = useState(null);
@@ -35,6 +37,12 @@ export default function Listing() {
         // Fetch profile data when listing data is available
         const profileData = await fetchProfileByName(listingData.seller.name);
         setProfile(profileData);
+
+        const sortedBids = listingData.bids.sort((a, b) => b.amount - a.amount);
+        setListing({
+          ...listingData,
+          bids: sortedBids,
+        });
 
         // Convert created date to a formatted string
         const createdDate = new Date(listingData.created);
@@ -112,6 +120,7 @@ export default function Listing() {
         return;
       }
 
+      // Fetch the updated listing information after a successful bid
       const bidResponse = await submitBid(listing.id, parsedBidAmount);
 
       if (bidResponse.ok) {
@@ -119,9 +128,19 @@ export default function Listing() {
 
         // Fetch the updated listing information after a successful bid
         const updatedListingData = await fetchListingById(listing.id);
-        setListing(updatedListingData);
 
-        toast.success(`You successfully bid $${parsedBidAmount}`, {
+        // Sort the bids in descending order based on their amounts
+        const sortedBids = updatedListingData.bids.sort(
+          (a, b) => b.amount - a.amount
+        );
+
+        // Update the listing state with the sorted bids
+        setListing({
+          ...updatedListingData,
+          bids: sortedBids,
+        });
+
+        toast.success(`You successfully bid $${parsedBidAmount}  🤝`, {
           duration: 5000,
         });
       } else {
@@ -141,6 +160,8 @@ export default function Listing() {
   if (!listing || !profile || !countdown || !formattedCreatedDate) {
     return <div>Loading...</div>;
   }
+
+  const padWithZero = (number) => String(number).padStart(2, "0");
 
   return (
     <>
@@ -163,22 +184,37 @@ export default function Listing() {
               <div className="absolute top-5 right-5">
                 <HeartButton />
               </div>
+              <div className="absolute top-4 left-5 flex gap-4">
+                {/* First tag */}
+                {listing.tags && listing.tags.length > 0 && (
+                  <div className="bg-white py-2 px-4 rounded-full font-semibold border-2">
+                    {listing.tags[0]}
+                  </div>
+                )}
+
+                {/* Additional tags */}
+                {listing.tags && listing.tags.length > 1 && (
+                  <div className="bg-white py-2 px-4 rounded-full font-semibold border-2">
+                    {listing.tags.slice(1).join(", ")}
+                  </div>
+                )}
+              </div>
             </div>
             {listing.media.length > 1 && (
-        <div className="md:w-1/4 flex flex-col gap-4 mt-8">
-          {listing.media.slice(1, 5).map((imageSrc, index) => (
-            <div
-              key={index}
-              className="w-full h-28 border-4 border-gray-300 rounded-xl transition duration-200 ease-in-out transform hover:border-blue-400"
-              onClick={() => handleImageClick(index + 1)}
-            >
-              <img
-                src={imageSrc}
-                alt=""
-                className="object-cover w-full h-full rounded-md cursor-pointer"
-              />
-            </div>
-          ))}
+              <div className="md:w-1/4 flex flex-col gap-4 mt-8">
+                {listing.media.slice(1, 5).map((imageSrc, index) => (
+                  <div
+                    key={index}
+                    className="w-full h-28 border-4 border-gray-300 rounded-xl transition duration-200 ease-in-out transform hover:border-blue-400"
+                    onClick={() => handleImageClick(index + 1)}
+                  >
+                    <img
+                      src={imageSrc}
+                      alt=""
+                      className="object-cover w-full h-full rounded-md cursor-pointer"
+                    />
+                  </div>
+                ))}
               </div>
             )}
           </div>
@@ -241,20 +277,30 @@ export default function Listing() {
                   Auction has ended
                 </div>
               ) : (
-                <div className="text-md font-light text-blue-500">
-                  Ends in:{" "}
-                  <span className="font-bold text-lg">
-                    {countdown.days} days {countdown.hours} hours{" "}
-                    {countdown.minutes} minutes {countdown.seconds} seconds
+                <div className="text-md font-light">
+                  <span className="flex font-bold text-lg text-blue-200 gap-3 items-center">
+                    <div className="flex justify-center w-10 p-2 bg-blue-100 rounded-xl text-blue-900">
+                      {padWithZero(countdown.days)}
+                    </div>
+                    :
+                    <div className="flex justify-center w-10 p-2 bg-blue-100 rounded-xl text-blue-900">
+                      {padWithZero(countdown.hours)}
+                    </div>
+                    :
+                    <div className="flex justify-center w-10 p-2 bg-blue-100 rounded-xl text-blue-900">
+                      {padWithZero(countdown.minutes)}
+                    </div>
+                    :
+                    <div className="flex justify-center w-10 p-2 bg-blue-100 rounded-xl text-blue-900">
+                      {padWithZero(countdown.seconds)}
+                    </div>
                   </span>
-                  ,{" "}
                 </div>
               )}
             </div>
 
             {/* Bid Form */}
-            <div className="flex flex-col gap-4 mt-4">
-              <label className="text-neutral-600">Place your bid:</label>
+            <div className="flex flex-col gap-4 py-4">
               <div className="flex flex-row items-center gap-2">
                 <input
                   type="text"
@@ -269,6 +315,48 @@ export default function Listing() {
                   Place Bid
                 </button>
               </div>
+            </div>
+            <hr />
+            <div>
+              <div className="flex gap-1.5 mb-4 justify-center">
+                <GrHistory size={18} className="mt-1 text-blue-500" />
+                <h2 className="text-xl font-semibold text-neutral-600">
+                  History
+                </h2>
+              </div>
+              <ul className="border-2 rounded-2xl max-h-56 overflow-y-auto">
+                {listing.bids.map((bid, index) => (
+                  <li key={index} className="flex gap-2 mb-2 p-2  rounded-2xl">
+                    <img
+                      src={defaultImage}
+                      alt={`${profile.name}'s Avatar`}
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        borderRadius: "50%",
+                      }}
+                      className="mt-1"
+                    />
+                    <div className="flex flex-col text-blue-500">
+                      <div className="text-lg font-semibold">
+                        {bid.bidderName}
+                        {index === 0 && (
+                          <span className="italic font-thin text-emerald-500 ms-4">
+                            - Top Bidder
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex flex-row gap-2">
+                        <FaBitcoin
+                          size={20}
+                          className="text-yellow-500 mt-0.5"
+                        />
+                        <div className="text-s font-light">${bid.amount}</div>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>

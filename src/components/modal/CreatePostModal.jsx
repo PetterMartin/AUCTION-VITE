@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { AiOutlineClose } from "react-icons/ai";
 import { FaTshirt, FaWineGlass, FaMobileAlt, FaLaptop } from "react-icons/fa";
+import { TiCamera } from "react-icons/ti";
 import { GiSofa } from "react-icons/gi";
 import { PiHouseBold } from "react-icons/pi";
 import { IoAddCircle } from "react-icons/io5";
 import CountrySelect from "../buttons/CountrySelect";
 import Map from "../buttons/Map";
-import NoImage from "../../assets/No-Image.png";
 
 const categories = [
   "Electronics",
@@ -41,6 +41,7 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
   const [step, setStep] = useState(STEPS.CATEGORY);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [userTags, setUserTags] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
   const closeModal = () => {
@@ -99,6 +100,7 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
     const newListing = {
       title: formTitle || "",
       description: description || "",
+      tags: userTags.split(",").map((tag) => tag.trim()),
       media: imageUrls,
       endsAt: endsAt || "",
     };
@@ -131,6 +133,14 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
     }
   }
 
+  const handleCategoryClick = (clickedCategory) => {
+    // You can customize how you want to append the category to existing userTags
+    setUserTags(
+      (prevUserTags) =>
+        prevUserTags + (prevUserTags ? `, ${clickedCategory}` : clickedCategory)
+    );
+  };
+
   const [selectedCountry, setSelectedCountry] = useState(null);
 
   const handleChange = (selectedOption) => {
@@ -160,6 +170,7 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
           {categories.map((category, index) => (
             <div
               key={index}
+              onClick={() => handleCategoryClick(category)}
               className="rounded-xl border-2 p-2 flex flex-col items-start text-gray-500 hover:text-blue-400 hover:border-blue-400 focus:border-blue-400 transition cursor-pointer"
             >
               <div className="flex items-center justify-center ms-5">
@@ -170,6 +181,23 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
               </div>
             </div>
           ))}
+        </div>
+        <div className="mt-6">
+          <label
+            htmlFor="userTags"
+            className="block text-md font-light mb-2 font-light text-neutral-500"
+          >
+            Or add your own tags (Optional)
+          </label>
+          <input
+            type="text"
+            id="userTags"
+            name="userTags"
+            placeholder="Enter tags separated by commas"
+            value={userTags}
+            onChange={(e) => setUserTags(e.target.value)}
+            className="w-full p-4 border-2 rounded-md outline-none transition hover:border-blue-400 focus:border-blue-400 cursor-pointer"
+          />
         </div>
       </div>
       <div className="flex flex-col gap-4 p-6">
@@ -243,8 +271,8 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
         <div className="flex flex-col">
           <div className="relative p-6 flex-auto">
             <div className="text-start">
-              <div className="text-2xl font-semibold">
-                Take a picture of your listing
+              <div className="flex text-2xl font-semibold">
+                Take a picture of your listing <TiCamera size={25} className="m-0.5 ms-2"/>
               </div>
               <div className="font-light text-neutral-500 mt-2 mb-6">
                 You can add more than one!
@@ -494,6 +522,22 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
                   className="py-2 text-xl outline-none cursor-pointer text-center"
                 />
               </div>
+
+              {userTags && userTags.length > 0 && (
+                <div className="font-light text-neutral-500 my-2 text-sm">
+                  <p>Tags:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {userTags.split(",").map((tag, index) => (
+                      <div
+                        key={index}
+                        className="border border-blue-400 p-1 rounded-md"
+                      >
+                        {tag.trim()}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
             {/* End of grouped inputs */}
 

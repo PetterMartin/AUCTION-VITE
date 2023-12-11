@@ -53,7 +53,7 @@ const EditModal = ({
                     ...listing,
                     title: newTitle,
                     description: newDescription,
-                    media: newMedia, // Include the updated media in the listing
+                    media: newMedia, 
                   }
                 : listing
             )

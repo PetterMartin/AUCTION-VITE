@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getProfile, updateProfileImage } from "../libs/api";
 import { FaEdit } from 'react-icons/fa';
-import placeholder from "../assets/user.png";
+import defaultUser from "../assets/defaultUser.png";
 import UsersListings from "../components/listings/UsersListings";
 
 export default function Profile() {
@@ -24,7 +24,7 @@ export default function Profile() {
 
             setUser(profileData);
             setCreditInfo({ credits: profileData.credits, currency: "USD" });
-            setProfileImageUrl(profileData.avatar || placeholder); // Use the avatar URL or fallback to a placeholder
+            setProfileImageUrl(profileData.avatar || defaultUser); 
             setIsAuthenticated(true);
           } catch (error) {
             console.error("Error fetching user profile:", error.message);
@@ -82,7 +82,7 @@ export default function Profile() {
               <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-600 to-blue-400"></div>
               <div className="absolute inset-1.5 rounded-full bg-white overflow-hidden p-2">
                 <img
-                  src={profileImageUrl || placeholder}
+                  src={profileImageUrl || defaultUser}
                   alt="Profile"
                   className="object-cover w-full h-full rounded-full"
                 />

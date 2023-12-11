@@ -33,9 +33,13 @@ function Listings({ searchQuery }) {
     fetchData();
   }, [searchQuery]);
 
+  const sortBidsByCreationTime = (bids) => {
+    return bids.slice().sort((a, b) => new Date(b.created) - new Date(a.created));
+  };
+
   return (
     <main className="container mx-auto lg:px-20 mt-4">
-      <hr className="mt-6 border-2 border-neutral-300" />
+      <hr className="mt-8 border border-blue-500" />
       <div className="mt-12">
         <div className="flex">
           <div className="flex gap-10 text-5xl text-gray-800 font-semibold">
@@ -65,7 +69,7 @@ function Listings({ searchQuery }) {
       </div>
 
       <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-4">
-        {listings.map(({ id, title, description, media, _count, endsAt }) => (
+        {listings.map(({ id, title, media, endsAt, bids }) => (
           <Link to={`/listing?id=${id}`} key={id} className="listing-link">
             <div className="listing-item overflow-hidden">
               <div className="aspect-square w-full relative overflow-hidden rounded-xl">
@@ -79,7 +83,7 @@ function Listings({ searchQuery }) {
                   {/* Pass the id as listingId */}
                 </div>
                 <div className="absolute bottom-3 left-3 font-bold text-white z-10 flex justify-between w-full">
-                  <div>{`$${_count.bids}.00`}</div>
+                <div>{`$${bids.length > 0 ? sortBidsByCreationTime(bids)[0].amount : 0}.00`}</div>
                   <div className="me-6">
                     Ends at: {endsAt && endsAt.substring(0, 10)}
                   </div>
@@ -97,7 +101,6 @@ function Listings({ searchQuery }) {
               <div className="font-semibold text-lg text-gray-800 mt-1">
                 {title}
               </div>
-              <div className="font-semibold text-gray-400">{description}</div>
             </div>
           </Link>
         ))}

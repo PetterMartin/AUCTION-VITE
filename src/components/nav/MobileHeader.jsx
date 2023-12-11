@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import logo from "../../assets/New-Logo.svg";
-import userPicture from "../../assets/user.png";
+import defaultUser from "../../assets/defaultUser.png";
 
 export default function MobileHeader() {
     const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -30,7 +30,7 @@ export default function MobileHeader() {
           </div>
           <div className="">
             <img
-              src={userPicture}
+              src={defaultUser}
               alt="User Image"
               className="w-10 h-10 rounded-full"
             />

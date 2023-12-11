@@ -10,7 +10,7 @@ import { BiLogInCircle } from "react-icons/bi";
 import { useAuth } from "../AuthContext";
 import PropTypes from "prop-types";
 import logo from "../../assets/New-Logo.svg";
-import placeholder from "../../assets/user.png";
+import defaultUser from "../../assets/defaultUser.png";
 import RegisterModal from "../modal/RegisterModal";
 import LoginModal from "../modal/LoginModal";
 import CreatePostModal from "../modal/CreatePostModal";
@@ -148,8 +148,8 @@ export default function Sidebar() {
           <img
             src={
               isAuthenticated
-                ? (user && user.avatar) || placeholder
-                : placeholder
+                ? (user && user.avatar) || defaultUser
+                : defaultUser
             }
             alt=""
             className="w-14 h-14 mx-3 rounded-full border-2 border-blue-500 p-1.5"

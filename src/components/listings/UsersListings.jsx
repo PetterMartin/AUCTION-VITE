@@ -31,10 +31,16 @@ function UsersListings() {
     setEditModalOpen(true);
   };
 
+  const sortBidsByCreationTime = (bids) => {
+    console.log("Bids:", bids);
+    return bids.slice().sort((a, b) => new Date(b.created) - new Date(a.created));
+  };
+  
+
   return (
     <main className="container mx-auto lg:px-20 mt-4">
       <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-4">
-        {listings.map(({ id, title, description, media, _count, endsAt }) => (
+        {listings.map(({ id, title, description, media, bids, endsAt }) => (
           <div key={id} className="listing-item">
             <div className="aspect-square w-full relative overflow-hidden rounded-xl">
               <img
@@ -50,7 +56,7 @@ function UsersListings() {
                     title,
                     description,
                     media,
-                    _count,
+                    bids,
                     endsAt,
                   })
                 }
@@ -59,7 +65,7 @@ function UsersListings() {
               </div>
 
               <div className="absolute bottom-3 left-3 font-bold text-white z-10 flex justify-between w-full">
-                <div>{`$${_count.bids}.00`}</div>
+              <div>{`$${bids?.length > 0 ? sortBidsByCreationTime(bids)[0].amount : 0}.00`}</div>
                 <div className="me-6">
                   Ends at: {endsAt && endsAt.substring(0, 10)}
                 </div>
