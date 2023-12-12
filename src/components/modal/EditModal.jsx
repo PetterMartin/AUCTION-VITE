@@ -23,10 +23,11 @@ const EditModal = ({
     setModalOpen: PropTypes.func.isRequired,
     currentListing: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      // Add other required fields in currentListing
     }),
     setListings: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired, 
+    media: PropTypes.arrayOf(PropTypes.string).isRequired, 
   };
 
   const closeModal = () => {
@@ -88,12 +89,11 @@ const EditModal = ({
         );
 
         if (response !== null) {
-          toast.warning(`Listing Deleted`, {
+          toast.success(`Listing Deleted`, {
             duration: 5000,
           });
         } else {
-          // Even if the response is null, close the modal and show a success message
-          toast.error(`Listing Deleted`, {
+          toast.success(`Listing Deleted`, {
             duration: 5000,
           });
         }

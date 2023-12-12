@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { fetchAllListings } from "../../libs/api";
 import { FaChevronDown } from "react-icons/fa";
+import { FaRegClock } from "react-icons/fa6";
 import NoImage from "../../assets/No-Image.png";
 import HeartButton from "../buttons/HeartButton";
 
@@ -30,11 +31,68 @@ function Listings({ searchQuery }) {
       }
     };
 
+    const updateCountdowns = () => {
+      setListings((prevListings) =>
+        prevListings.map((listing) => {
+          const countdown = calculateCountdown(listing.endsAt);
+          return {
+            ...listing,
+            formattedCountdown: formatCountdown(countdown),
+          };
+        })
+      );
+    };
+
     fetchData();
+
+    const intervalId = setInterval(updateCountdowns, 1000);
+
+    return () => clearInterval(intervalId);
   }, [searchQuery]);
 
+  const calculateCountdown = (endTime) => {
+    const now = new Date().getTime();
+    const endsAtTime = new Date(endTime).getTime();
+    const timeDifference = endsAtTime - now;
+
+    if (timeDifference <= 0) {
+      return {
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+      };
+    } else {
+      const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor(
+        (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      );
+      const minutes = Math.floor(
+        (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+      );
+      const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+      return {
+        days,
+        hours,
+        minutes,
+        seconds,
+      };
+    }
+  };
+
+  const formatCountdown = (countdown) => {
+    const padWithZero = (number) => String(number).padStart(2, "0");
+
+    return `${padWithZero(countdown.days)}:${padWithZero(
+      countdown.hours
+    )}:${padWithZero(countdown.minutes)}:${padWithZero(countdown.seconds)}`;
+  };
+
   const sortBidsByCreationTime = (bids) => {
-    return bids.slice().sort((a, b) => new Date(b.created) - new Date(a.created));
+    return bids
+      .slice()
+      .sort((a, b) => new Date(b.created) - new Date(a.created));
   };
 
   return (
@@ -69,41 +127,61 @@ function Listings({ searchQuery }) {
       </div>
 
       <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-4">
-        {listings.map(({ id, title, media, endsAt, bids }) => (
-          <Link to={`/listing?id=${id}`} key={id} className="listing-link">
-            <div className="listing-item overflow-hidden">
-              <div className="aspect-square w-full relative overflow-hidden rounded-xl">
-                <img
-                  src={media[0] ? media[0] : NoImage}
-                  alt="Listing Image"
-                  className="object-cover w-full h-full hover:scale-110 transition"
-                />
-                <div className="absolute top-3 right-3 z-10">
-                  <HeartButton listingId={id} />{" "}
-                  {/* Pass the id as listingId */}
-                </div>
-                <div className="absolute bottom-3 left-3 font-bold text-white z-10 flex justify-between w-full">
-                <div>{`$${bids.length > 0 ? sortBidsByCreationTime(bids)[0].amount : 0}.00`}</div>
-                  <div className="me-6">
-                    Ends at: {endsAt && endsAt.substring(0, 10)}
+        {listings.map(({ id, title, media, endsAt, bids }) => {
+          const countdown = calculateCountdown(endsAt);
+          const formattedCountdown = formatCountdown(countdown);
+
+          return (
+            <Link to={`/listing?id=${id}`} key={id} className="listing-link">
+              <div className="listing-item overflow-hidden border p-4 rounded-3xl shadow-xl">
+                <div className="aspect-square w-full relative overflow-hidden rounded-xl ">
+                  <img
+                    src={media[0] ? media[0] : NoImage}
+                    alt="Listing Image"
+                    className="object-cover w-full h-full hover:scale-110 transition"
+                  />
+                  <div className="absolute top-3 right-3 z-100">
+                    <HeartButton />
+                  </div>
+                  <div
+                    className={`flex gap-3 absolute top-3 left-3 bg-white py-2 px-4 rounded-full text-sm font-semibold border-2 ${
+                      (countdown.days === 0 && countdown.hours <= 1) ||
+                      (countdown.days === 0 &&
+                        countdown.hours === 0 &&
+                        countdown.minutes === 0 &&
+                        countdown.seconds === 0)
+                        ? "text-rose-400"
+                        : "text-blue-400"
+                    }`}
+                  >
+                    <FaRegClock size={18} className="mt-0.5" />
+                    {countdown.days === 0 &&
+                    countdown.hours === 0 &&
+                    countdown.minutes === 0 &&
+                    countdown.seconds === 0 ? (
+                      <span>Auction Finished</span>
+                    ) : (
+                      <span>{formattedCountdown}</span>
+                    )}
                   </div>
                 </div>
-                <div
-                  className="absolute inset-0 rounded-xl"
-                  style={{
-                    background:
-                      "linear-gradient(transparent, rgba(0, 0, 0, 0.05) 90%, rgba(0, 0, 0, 0.7))",
-                    position: "absolute",
-                    zIndex: 1,
-                  }}
-                ></div>
+                <div className="flex flex-col gap-2 px-2">
+                  <div className="font-semibold text-xl text-gray-700 mt-3">
+                    {title}
+                  </div>
+                  <div className="flex font-semibold justify-between">
+                    <div className="text-lg text-neutral-500">Price</div>
+                    <div className="text-xl text-blue-400">{`$ ${
+                      bids.length > 0
+                        ? sortBidsByCreationTime(bids)[0].amount
+                        : 0
+                    }`}</div>
+                  </div>
+                </div>
               </div>
-              <div className="font-semibold text-lg text-gray-800 mt-1">
-                {title}
-              </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          );
+        })}
       </div>
     </main>
   );

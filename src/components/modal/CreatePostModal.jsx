@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import { Toaster, toast } from "sonner";
 import { AiOutlineClose } from "react-icons/ai";
 import { FaTshirt, FaWineGlass, FaMobileAlt, FaLaptop } from "react-icons/fa";
 import { TiCamera } from "react-icons/ti";
@@ -120,6 +121,10 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
 
       if (response.ok) {
         console.log("Listing successful!");
+
+        toast.success(`Listing Created`, {
+          duration: 5000,
+        });
         closeModal();
       } else {
         throw new Error("Failed to create listing");
@@ -590,6 +595,7 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
 
   return (
     <>
+    <Toaster richColors />
       {isModalOpen && (
         <form
           onSubmit={handleOnSubmit}

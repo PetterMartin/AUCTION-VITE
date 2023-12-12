@@ -1,11 +1,10 @@
-import { useState, useEffect, useContext, createContext } from "react";
+import { useState, useEffect, useContext, createContext, useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import { getProfile } from "../../libs/api";
 import { HiChatBubbleOvalLeft, HiMiniInformationCircle } from "react-icons/hi2";
 import { FaHeart, FaBitcoin } from "react-icons/fa";
-import { IoAddCircle } from "react-icons/io5";
+import { IoAddCircle, IoSettingsSharp } from "react-icons/io5";
 import { PiHouseFill } from "react-icons/pi";
-import { IoSettingsSharp } from "react-icons/io5";
 import { BiLogInCircle } from "react-icons/bi";
 import { useAuth } from "../AuthContext";
 import PropTypes from "prop-types";
@@ -25,6 +24,7 @@ export default function Sidebar() {
   const [user, setUser] = useState(null);
   const [creditInfo, setCreditInfo] = useState({});
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const sidebarRef = useRef(null);
 
   const auth = useAuth();
 
@@ -44,7 +44,7 @@ export default function Sidebar() {
   };
 
   const handleLogout = () => {
-    auth.logout(); // Use the logout function from the useAuth hook
+    auth.logout(); 
   };
 
   useEffect(() => {
@@ -74,8 +74,26 @@ export default function Sidebar() {
     fetchUserProfile();
   }, [userId, isAuthenticated]);
 
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      // Check if the clicked element is inside the sidebar
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+        // Click is outside the sidebar, collapse it
+        setExpanded(false);
+      }
+    };
+
+    // Attach the event listener to the document
+    document.addEventListener("click", handleOutsideClick);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+  }, []);
+
   return (
-    <aside className="h-screen fixed z-20 hidden md:block">
+    <aside className="h-screen fixed z-20 hidden md:block" ref={sidebarRef}>
       <RegisterModal
         isModalOpen={isRegisterModalOpen}
         setModalOpen={setRegisterModalOpen}

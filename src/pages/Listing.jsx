@@ -15,6 +15,7 @@ export default function Listing() {
   const [countdown, setCountdown] = useState(null);
   const [formattedCreatedDate, setFormattedCreatedDate] = useState(null);
   const [bidAmount, setBidAmount] = useState("");
+  const [bidErrorMessage, setBidErrorMessage] = useState("");
 
   const handleImageClick = (index) => {
     const temp = listing.media[0];
@@ -116,9 +117,11 @@ export default function Listing() {
       const currentBidAmount = listing._count.bids;
 
       if (parsedBidAmount <= currentBidAmount) {
-        console.error("Your bid must be higher than the current bid.");
+        setBidErrorMessage("Your bid must be higher than the current bid.");
         return;
       }
+
+      setBidErrorMessage("");
 
       // Fetch the updated listing information after a successful bid
       const bidResponse = await submitBid(listing.id, parsedBidAmount);
@@ -185,7 +188,6 @@ export default function Listing() {
                 <HeartButton />
               </div>
               <div className="absolute top-4 left-5 flex gap-4">
-                {/* First tag */}
                 {listing.tags &&
                   listing.tags.length > 0 &&
                   listing.tags.map((tag, index) => (
@@ -313,6 +315,9 @@ export default function Listing() {
                   Place Bid
                 </button>
               </div>
+              {bidErrorMessage && (
+        <div className="text-red-500 text-sm">{bidErrorMessage}</div>
+      )}
             </div>
             <hr />
             <div>
