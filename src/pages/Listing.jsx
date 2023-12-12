@@ -186,15 +186,16 @@ export default function Listing() {
               </div>
               <div className="absolute top-4 left-5 flex gap-4">
                 {/* First tag */}
-                {listing.tags && listing.tags.length > 0 &&
-    listing.tags.map((tag, index) => (
-      <div key={index} className="bg-white py-2 px-4 rounded-full font-semibold border-2">
-        {tag}
-      </div>
-    ))
-  }
-
-                
+                {listing.tags &&
+                  listing.tags.length > 0 &&
+                  listing.tags.map((tag, index) => (
+                    <div
+                      key={index}
+                      className="bg-white py-2 px-4 rounded-full font-semibold border-2"
+                    >
+                      {tag}
+                    </div>
+                  ))}
               </div>
             </div>
             {listing.media.length > 1 && (
