@@ -26,18 +26,21 @@ export default function fetcher(url, options) {
   return fetch(url, updateOptions(options));
 }
 
-/** 
+/**
  * Fetch all listings
  */
 export async function fetchAllListings() {
   try {
-    const response = await fetch(`${apiUrl}/listings?sort=created&sortOrder=desc&_bids=true`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        // Add any additional headers if needed
-      },
-    });
+    const response = await fetch(
+      `${apiUrl}/listings?sort=created&sortOrder=desc&_bids=true`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          // Add any additional headers if needed
+        },
+      }
+    );
 
     // Check if the response status is OK (200)
     if (response.ok) {
@@ -48,17 +51,19 @@ export async function fetchAllListings() {
     }
   } catch (error) {
     // Handle fetch errors
-    console.error('Error fetching listings:', error);
+    console.error("Error fetching listings:", error);
   }
 }
 
 export async function fetchListingById(listingId) {
-  const url = new URL(`${apiUrl}/listings/${listingId}?_bids=true&_seller=true`);
+  const url = new URL(
+    `${apiUrl}/listings/${listingId}?_bids=true&_seller=true`
+  );
 
   const options = {
-    method: 'GET',
+    method: "GET",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
   };
 
@@ -73,17 +78,20 @@ export async function fetchListingById(listingId) {
     }
   } catch (error) {
     // Handle fetch errors
-    console.error('Error fetching listing:', error);
+    console.error("Error fetching listing:", error);
   }
 }
 
-export async function updateListing(listingId, { title, description, tags, media }) {
+export async function updateListing(
+  listingId,
+  { title, description, tags, media }
+) {
   const url = new URL(`${apiUrl}/listings/${listingId}`);
 
   const options = {
-    method: 'PUT',
+    method: "PUT",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("jwt")}`,
     },
     body: JSON.stringify({
@@ -105,7 +113,7 @@ export async function updateListing(listingId, { title, description, tags, media
       return null; // Explicitly return null when the update fails
     }
   } catch (error) {
-    console.error('Error updating listing:', error);
+    console.error("Error updating listing:", error);
     return null; // Explicitly return null when there's an error
   }
 }
@@ -114,9 +122,9 @@ export async function deleteListing(listingId) {
   const url = new URL(`${apiUrl}/listings/${listingId}`);
 
   const options = {
-    method: 'DELETE',
+    method: "DELETE",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("jwt")}`,
     },
   };
@@ -134,11 +142,10 @@ export async function deleteListing(listingId) {
       return null;
     }
   } catch (error) {
-    console.error('Error deleting listing:', error);
+    console.error("Error deleting listing:", error);
     return null;
   }
 }
-
 
 /** * Sign up user - register page */
 export async function registerUser({ email, password, username, avatar }) {
@@ -166,7 +173,7 @@ export async function registerUser({ email, password, username, avatar }) {
 
     const data = await response.json();
     localStorage.setItem("jwt", data.accessToken);
-    localStorage.setItem("userId", data.name);
+    localStorage.setItem("user_name", data.userId);
 
     return data;
   } catch (error) {
@@ -203,9 +210,9 @@ export async function loginUser(email, password) {
 export async function getProfile(userName) {
   const apiUser = `${apiUrl}/profiles/${userName}`;
   const options = {
-    method: 'GET',
+    method: "GET",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("jwt")}`,
     },
   };
@@ -214,23 +221,26 @@ export async function getProfile(userName) {
     const response = await fetch(`${apiUser}?_listings=true`, options);
 
     if (response.ok) {
-      const userProfile = await response.json();
+      const userProfile = await response.json(); // Extract JSON data here
       return userProfile;
     } else {
-      throw new Error('Failed to fetch user profile. Please try again later.');
+      throw new Error(
+        "Failed to fetch user profile. Please try again later."
+      );
     }
   } catch (error) {
+    console.error("Error fetching user profile:", error);
     return null;
   }
 }
 
 export async function fetchProfileByName(profileName) {
   const url = new URL(`${apiUrl}/profiles/${profileName}`);
-  
+
   const options = {
-    method: 'GET',
+    method: "GET",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("jwt")}`,
     },
   };
@@ -245,18 +255,17 @@ export async function fetchProfileByName(profileName) {
       console.error(`Failed to fetch profile. Status: ${response.status}`);
     }
   } catch (error) {
-    console.error('Error fetching profile:', error);
+    console.error("Error fetching profile:", error);
   }
 }
-
 
 export async function getProfileListings(userName) {
   const apiUserListings = `${apiUrl}/profiles/${userName}/listings?sort=created&sortOrder=desc&_bids=true`; // Adjust the endpoint
 
   const options = {
-    method: 'GET',
+    method: "GET",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("jwt")}`,
     },
   };
@@ -268,10 +277,10 @@ export async function getProfileListings(userName) {
       const userListingData = await response.json();
       return userListingData;
     } else {
-      throw new Error('Failed to fetch user listings. Please try again later.');
+      throw new Error("Failed to fetch user listings. Please try again later.");
     }
   } catch (error) {
-    console.error('Error fetching user listings:', error);
+    console.error("Error fetching user listings:", error);
     return null;
   }
 }
@@ -279,9 +288,9 @@ export async function getProfileListings(userName) {
 export async function updateProfileImage(user, imageUrl, token) {
   const URL = `${apiUrl}/profiles/${user}/media`;
   const response = await fetcher(URL, {
-    method: 'PUT',
+    method: "PUT",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ avatar: imageUrl }),
@@ -294,9 +303,9 @@ export async function fetchBidsForListing(listingId) {
   const url = new URL(`${apiUrl}/listings/${listingId}/bids`);
 
   const options = {
-    method: 'GET',
+    method: "GET",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("jwt")}`,
     },
   };
@@ -308,10 +317,12 @@ export async function fetchBidsForListing(listingId) {
       const data = await response.json();
       return data;
     } else {
-      console.error(`Failed to fetch bids for listing. Status: ${response.status}`);
+      console.error(
+        `Failed to fetch bids for listing. Status: ${response.status}`
+      );
     }
   } catch (error) {
-    console.error('Error fetching bids for listing:', error);
+    console.error("Error fetching bids for listing:", error);
   }
 }
 
@@ -319,9 +330,9 @@ export async function submitBid(listingId, bidAmount) {
   const url = new URL(`${apiUrl}/listings/${listingId}/bids`);
 
   const options = {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("jwt")}`,
     },
     body: JSON.stringify({
@@ -340,23 +351,22 @@ export async function submitBid(listingId, bidAmount) {
       return { ok: true, data }; // Return an object with 'ok' flag and data
     } else {
       const errorData = await response.json();
-      console.error(`Failed to submit bid. Status: ${response.status}, Error: ${JSON.stringify(errorData)}`);
+      console.error(
+        `Failed to submit bid. Status: ${
+          response.status
+        }, Error: ${JSON.stringify(errorData)}`
+      );
       return { ok: false, error: errorData }; // Return an object with 'ok' flag and error data
     }
   } catch (error) {
-    console.error('Error submitting bid:', error);
+    console.error("Error submitting bid:", error);
     throw new Error(error);
   }
 }
 
-
-
-
-
 export function logoutUser() {
-  localStorage.removeItem('jwt');
-  localStorage.removeItem('user_name');
-  localStorage.removeItem('credits');
-  localStorage.removeItem('avatar');
+  localStorage.removeItem("jwt");
+  localStorage.removeItem("user_name");
+  localStorage.removeItem("credits");
+  localStorage.removeItem("avatar");
 }
-

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { fetchListingById, fetchProfileByName, submitBid } from "../libs/api";
 import { Toaster, toast } from "sonner";
 import { FaBitcoin } from "react-icons/fa";
@@ -224,26 +225,28 @@ export default function Listing() {
           {/* Left Side */}
           <div className="col-span-4 flex flex-col gap-5">
             <div className="flex flex-col gap-1">
-              <div className="text-xl font-semibold flex flex-row items-center gap-3">
-                <img
-                  src={profile.avatar || defaultImage}
-                  alt={`${profile.name}'s Avatar`}
-                  style={{
-                    width: "60px",
-                    height: "60px",
-                    borderRadius: "50%",
-                  }}
-                />
-                <div className="flex flex-col text-blue-500">
-                  <div>{profile.name}</div>
-                  <div className="flex flex-row gap-1">
-                    <RiShieldCheckFill size={20} />
-                    <div className="text-sm font-light">
-                      Verified with BankId
+            <Link to={`/profile?name=${profile.name}`} className="listing-link">
+                <div className="text-xl font-semibold flex flex-row items-center gap-3">
+                  <img
+                    src={profile.avatar || defaultImage}
+                    alt={`${profile.name}'s Avatar`}
+                    style={{
+                      width: "60px",
+                      height: "60px",
+                      borderRadius: "50%",
+                    }}
+                  />
+                  <div className="flex flex-col text-blue-500">
+                    <div>{profile.name}</div>
+                    <div className="flex flex-row gap-1">
+                      <RiShieldCheckFill size={20} />
+                      <div className="text-sm font-light">
+                        Verified with BankId
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             </div>
             <hr />
             <div className="text-lg font-light text-neutral-500 overflow-hidden">
@@ -273,7 +276,7 @@ export default function Listing() {
               countdown.hours === 0 &&
               countdown.minutes === 0 &&
               countdown.seconds === 0 ? (
-                <div className="text-md font-light text-red-500">
+                <div className="text-md font-semibold text-rose-400">
                   Auction has ended
                 </div>
               ) : (
@@ -316,8 +319,8 @@ export default function Listing() {
                 </button>
               </div>
               {bidErrorMessage && (
-        <div className="text-red-500 text-sm">{bidErrorMessage}</div>
-      )}
+                <div className="text-rose-400 text-sm">{bidErrorMessage}</div>
+              )}
             </div>
             <hr />
             <div>
@@ -344,7 +347,7 @@ export default function Listing() {
                       <div className="text-lg font-semibold">
                         {bid.bidderName}
                         {index === 0 && (
-                          <span className="italic font-thin text-emerald-500 ms-4">
+                          <span className="italic font-thin text-emerald-400 ms-4">
                             - Top Bidder
                           </span>
                         )}

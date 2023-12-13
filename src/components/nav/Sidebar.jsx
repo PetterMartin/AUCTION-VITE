@@ -185,7 +185,7 @@ export default function Sidebar() {
           >
             <div className="w-full text-gray-00" style={{ fontSize: "16px" }}>
               {isAuthenticated ? (
-                <Link to="/profile" style={{ color: "black" }}>
+                <Link to={`/profile?name=${user.name}`}>
                   <div className="hover:bg-gray-100/50 p-3 whitespace-nowrap text-gray-600">
                     {user && user.name}
                   </div>

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { fetchAllListings } from "../../libs/api";
-import { FaChevronDown } from "react-icons/fa";
 import { FaRegClock } from "react-icons/fa6";
 import NoImage from "../../assets/No-Image.png";
 import HeartButton from "../buttons/HeartButton";
@@ -107,79 +106,68 @@ function Listings({ searchQuery }) {
         </div>
       </div>
 
-      <div className="flex text-lg text-gray-700 font-semibold my-6 gap-4 ">
-        <button className="px-4 py-1 border-2 border-neutral-200 rounded-full flex gap-3 hover:border-gray-700 transition duration-200 ease-in-out">
-          Product
-          <FaChevronDown size={15} className="mt-1.5" />
-        </button>
-        <button className="px-4 py-1 border-2 border-neutral-200 rounded-full flex gap-3 hover:border-gray-700 transition duration-200 ease-in-out">
-          Color
-          <FaChevronDown size={15} className="mt-1.5" />
-        </button>
-        <button className="px-4 py-1 border-2 border-neutral-200 rounded-full flex gap-3 hover:border-gray-700 transition duration-200 ease-in-out">
-          A-Z
-          <FaChevronDown size={15} className="mt-1.5" />
-        </button>
-        <button className="px-4 py-1 border-2 border-neutral-200 rounded-full flex gap-3 hover:border-gray-700 transition duration-200 ease-in-out">
-          Price
-          <FaChevronDown size={15} className="mt-1.5" />
-        </button>
-      </div>
-
       <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-4">
         {listings.map(({ id, title, media, endsAt, bids }) => {
           const countdown = calculateCountdown(endsAt);
           const formattedCountdown = formatCountdown(countdown);
 
           return (
-            <Link to={`/listing?id=${id}`} key={id} className="listing-link">
-              <div className="listing-item overflow-hidden border p-4 rounded-3xl shadow-xl">
-                <div className="aspect-square w-full relative overflow-hidden rounded-xl ">
-                  <img
-                    src={media[0] ? media[0] : NoImage}
-                    alt="Listing Image"
-                    className="object-cover w-full h-full hover:scale-110 transition"
-                  />
-                  <div className="absolute top-3 right-3 z-100">
-                    <HeartButton />
-                  </div>
-                  <div
-                    className={`flex gap-3 absolute top-3 left-3 bg-white py-2 px-4 rounded-full text-sm font-semibold border-2 ${
-                      (countdown.days === 0 && countdown.hours <= 1) ||
-                      (countdown.days === 0 &&
+            <>
+              <div className="relative">
+                <div className="absolute top-8 right-8 z-10">
+                  <HeartButton />
+                </div>
+                <Link
+                  to={`/listing?id=${id}`}
+                  key={id}
+                  className="listing-link"
+                >
+                  <div className="listing-item overflow-hidden border p-4 rounded-3xl shadow-xl">
+                    <div className="aspect-square w-full relative overflow-hidden rounded-xl ">
+                      <img
+                        src={media[0] ? media[0] : NoImage}
+                        alt="Listing Image"
+                        className="object-cover w-full h-full hover:scale-110 transition"
+                      />
+                      <div
+                        className={`flex gap-3 absolute top-3 left-3 bg-white py-2 px-4 rounded-full text-sm font-semibold border-2 ${
+                          (countdown.days === 0 && countdown.hours <= 1) ||
+                          (countdown.days === 0 &&
+                            countdown.hours === 0 &&
+                            countdown.minutes === 0 &&
+                            countdown.seconds === 0)
+                            ? "text-rose-400"
+                            : "text-blue-400"
+                        }`}
+                      >
+                        <FaRegClock size={18} className="mt-0.5" />
+                        {countdown.days === 0 &&
                         countdown.hours === 0 &&
                         countdown.minutes === 0 &&
-                        countdown.seconds === 0)
-                        ? "text-rose-400"
-                        : "text-blue-400"
-                    }`}
-                  >
-                    <FaRegClock size={18} className="mt-0.5" />
-                    {countdown.days === 0 &&
-                    countdown.hours === 0 &&
-                    countdown.minutes === 0 &&
-                    countdown.seconds === 0 ? (
-                      <span>Auction Finished</span>
-                    ) : (
-                      <span>{formattedCountdown}</span>
-                    )}
+                        countdown.seconds === 0 ? (
+                          <span>Auction Finished</span>
+                        ) : (
+                          <span>{formattedCountdown}</span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-2 px-2">
+                      <div className="font-semibold text-xl text-gray-700 mt-3">
+                        {title}
+                      </div>
+                      <div className="flex font-semibold justify-between">
+                        <div className="text-lg text-neutral-500">Price</div>
+                        <div className="text-xl text-blue-400">{`$ ${
+                          bids.length > 0
+                            ? sortBidsByCreationTime(bids)[0].amount
+                            : 0
+                        }`}</div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="flex flex-col gap-2 px-2">
-                  <div className="font-semibold text-xl text-gray-700 mt-3">
-                    {title}
-                  </div>
-                  <div className="flex font-semibold justify-between">
-                    <div className="text-lg text-neutral-500">Price</div>
-                    <div className="text-xl text-blue-400">{`$ ${
-                      bids.length > 0
-                        ? sortBidsByCreationTime(bids)[0].amount
-                        : 0
-                    }`}</div>
-                  </div>
-                </div>
+                </Link>
               </div>
-            </Link>
+            </>
           );
         })}
       </div>

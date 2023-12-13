@@ -5,7 +5,8 @@ import defaultUser from "../assets/defaultUser.png";
 import UsersListings from "../components/listings/UsersListings";
 
 export default function Profile() {
-  const userId = localStorage.getItem("user_name");
+  const searchParams = new URLSearchParams(window.location.search);
+  const userId = searchParams.get("name");
   const [user, setUser] = useState(null);
   const [creditInfo, setCreditInfo] = useState({});
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -30,7 +31,6 @@ export default function Profile() {
             console.error("Error fetching user profile:", error.message);
           }
         } else {
-          // If no user or token is present, set isAuthenticated to false
           setIsAuthenticated(false);
         }
       } catch (error) {
@@ -131,7 +131,7 @@ export default function Profile() {
       )}
 
       {/* Include the UsersListings component here */}
-      <UsersListings />
+      <UsersListings userId={userId} />
     </div>
   );
 }

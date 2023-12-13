@@ -4,18 +4,25 @@ import { Link } from "@tanstack/react-router";
 import { FaEdit } from "react-icons/fa";
 import EditModal from "../modal/EditModal";
 import NoImage from "../../assets/No-Image.png";
+import { useAuth } from "../AuthContext";
 
 function UsersListings() {
-  const userId = localStorage.getItem("user_name");
+  const searchParams = new URLSearchParams(window.location.search);
+  const userId = searchParams.get("name");
   const [listings, setListings] = useState([]);
   const [currentListing, setCurrentListing] = useState(null);
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchUserListings = async () => {
       try {
-        if (userId) {
+        if (userId && user) {
           const data = await getProfileListings(userId);
-          setListings(data || []); // Set an empty array if data is falsy
+          setListings(data || []);
+        } else {
+          // Handle the case where the user is not logged in
+          console.warn("User is not logged in.");
+          // You might want to redirect to the login page or handle it in some way
         }
       } catch (error) {
         console.error("Error fetching user listings:", error);
@@ -23,7 +30,10 @@ function UsersListings() {
     };
 
     fetchUserListings();
-  }, [userId]);
+  }, [userId, user]);
+
+  console.log("User:", user);
+  console.log("UserId:", userId);
 
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const openEditModal = (listing) => {
@@ -32,10 +42,10 @@ function UsersListings() {
   };
 
   const sortBidsByCreationTime = (bids) => {
-    console.log("Bids:", bids);
-    return bids.slice().sort((a, b) => new Date(b.created) - new Date(a.created));
+    return bids
+      .slice()
+      .sort((a, b) => new Date(b.created) - new Date(a.created));
   };
-  
 
   return (
     <main className="container mx-auto lg:px-20 mt-4">
@@ -48,24 +58,31 @@ function UsersListings() {
                 alt="Listing Image"
                 className="object-cover w-full h-full hover:scale-110 transition"
               />
-              <div
-                className="flex absolute top-0 left-4 z-10 gap-2 font-semibold bg-white text-blue-500 py-2 px-4 rounded-b-xl hover:bg-gray-100 cursor-pointer"
-                onClick={() =>
-                  openEditModal({
-                    id,
-                    title,
-                    description,
-                    media,
-                    bids,
-                    endsAt,
-                  })
-                }
-              >
-                Edit <FaEdit size={15} className="mt-0.5" />
-              </div>
+              {userId && (
+                <div className="flex absolute top-0 left-4 z-10 gap-2 font-semibold bg-white text-blue-500 py-2 px-4 rounded-b-xl hover:bg-gray-100 cursor-pointer">
+                  {userId && user && userId === user.name && (
+                    <div
+                      onClick={() =>
+                        openEditModal({
+                          id,
+                          title,
+                          description,
+                          media,
+                          bids,
+                          endsAt,
+                        })
+                      }
+                    >
+                      Edit <FaEdit size={15} className="mt-0.5" />
+                    </div>
+                  )}
+                </div>
+              )}
 
               <div className="absolute bottom-3 left-3 font-bold text-white z-10 flex justify-between w-full">
-              <div>{`$${bids?.length > 0 ? sortBidsByCreationTime(bids)[0].amount : 0}.00`}</div>
+                <div>{`$${
+                  bids?.length > 0 ? sortBidsByCreationTime(bids)[0].amount : 0
+                }.00`}</div>
                 <div className="me-6">
                   Ends at: {endsAt && endsAt.substring(0, 10)}
                 </div>
