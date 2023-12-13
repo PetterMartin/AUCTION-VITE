@@ -96,15 +96,7 @@ function Listings({ searchQuery }) {
 
   return (
     <main className="container mx-auto lg:px-20 mt-4">
-      <hr className="mt-8 border border-blue-500" />
-      <div className="mt-12">
-        <div className="flex">
-          <div className="flex gap-10 text-5xl text-gray-800 font-semibold">
-            <h1 className="text-blue-500">Listings</h1>
-            <h1 className="text-gray-400/60">Featured</h1>
-          </div>
-        </div>
-      </div>
+      <hr className="my-8 border border-blue-500" />
 
       <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-4">
         {listings.map(({ id, title, media, endsAt, bids }) => {

@@ -171,7 +171,7 @@ export default function Listing() {
     <>
       <div className="max-w-screen-lg mx-auto pb-12">
         <div className="flex flex-col">
-          <h1 className="capitalize font-semibold text-3xl mt-8">
+          <h1 className="capitalize text-gray-800 font-semibold text-3xl mt-8">
             {listing.title}
           </h1>
           <div className="font-light text-sm text-neutral-500">
@@ -194,7 +194,7 @@ export default function Listing() {
                   listing.tags.map((tag, index) => (
                     <div
                       key={index}
-                      className="bg-white py-2 px-4 rounded-full font-semibold border-2"
+                      className="bg-white py-2 px-4 rounded-full font-semibold border-2 text-gray-800"
                     >
                       {tag}
                     </div>

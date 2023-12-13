@@ -10,7 +10,7 @@ export default function App() {
     <Toaster />
       <Sidebar />
       <Outlet />
-      <div className="md:hidden">
+      <div className="xl:hidden">
         <Mobilenav />
       </div>
     </>

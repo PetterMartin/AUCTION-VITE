@@ -3,8 +3,10 @@ import { getProfile, updateProfileImage } from "../libs/api";
 import { FaEdit } from 'react-icons/fa';
 import defaultUser from "../assets/defaultUser.png";
 import UsersListings from "../components/listings/UsersListings";
+import { useAuth } from "../components/AuthContext";
 
 export default function Profile() {
+  const { user: authUser } = useAuth();
   const searchParams = new URLSearchParams(window.location.search);
   const userId = searchParams.get("name");
   const [user, setUser] = useState(null);
@@ -88,12 +90,14 @@ export default function Profile() {
                 />
               </div>
             </div>
-            <button
-              onClick={handleChangeImage}
-              className="absolute bottom-[-15px] p-2.5 rounded-full z-10 border-4 border-white bg-gradient-to-r from-blue-600 to-blue-500 text-white"
-            >
-              <FaEdit size={15} />
-            </button>
+            {userId && isAuthenticated && authUser && userId === authUser.name && (
+              <button
+                onClick={handleChangeImage}
+                className="absolute bottom-[-15px] p-2.5 rounded-full z-10 border-4 border-white bg-gradient-to-r from-blue-600 to-blue-500 text-white"
+              >
+                <FaEdit size={15} />
+              </button>
+            )}
           </div>
         </div>
 

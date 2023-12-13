@@ -93,7 +93,7 @@ export default function Sidebar() {
   }, []);
 
   return (
-    <aside className="h-screen fixed z-20 hidden md:block" ref={sidebarRef}>
+    <aside className="h-screen fixed z-20 hidden xl:block" ref={sidebarRef}>
       <RegisterModal
         isModalOpen={isRegisterModalOpen}
         setModalOpen={setRegisterModalOpen}
@@ -184,7 +184,7 @@ export default function Sidebar() {
             }`}
           >
             <div className="w-full text-gray-00" style={{ fontSize: "16px" }}>
-              {isAuthenticated ? (
+              {isAuthenticated && user? (
                 <Link to={`/profile?name=${user.name}`}>
                   <div className="hover:bg-gray-100/50 p-3 whitespace-nowrap text-gray-600">
                     {user && user.name}

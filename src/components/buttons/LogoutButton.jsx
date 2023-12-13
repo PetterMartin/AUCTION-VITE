@@ -1,5 +1,4 @@
 import { Toaster, toast } from "sonner";
-import { logoutUser } from "../../libs/api";
 import { useAuth } from "../AuthContext";
 import PropTypes from "prop-types";
 import { BiLogOutCircle } from "react-icons/bi";
@@ -21,9 +20,6 @@ export default function LogoutButton({ setUser }) {
     toast("You have successfully Logged out", {
       duration: 5000, // Optional, how long the toast should be displayed
     });
-
-    // Call your logoutUser function from the api.js
-    logoutUser();
   };
 
   return (

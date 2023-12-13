@@ -174,7 +174,6 @@ export async function registerUser({ email, password, username, avatar }) {
     const data = await response.json();
     localStorage.setItem("jwt", data.accessToken);
     localStorage.setItem("user_name", data.userId);
-
     return data;
   } catch (error) {
     throw new Error(error);
@@ -218,16 +217,15 @@ export async function getProfile(userName) {
   };
 
   try {
-    const response = await fetch(`${apiUser}?_listings=true`, options);
+    const response = await fetch(apiUser, options);
 
-    if (response.ok) {
-      const userProfile = await response.json(); // Extract JSON data here
-      return userProfile;
-    } else {
-      throw new Error(
-        "Failed to fetch user profile. Please try again later."
-      );
+    if (!response.ok) {
+      throw new Error(`Failed to fetch user profile. Status: ${response.status}`);
     }
+
+    const userProfile = await response.json(); 
+    console.log(userProfile)// Extract JSON data here
+    return userProfile;
   } catch (error) {
     console.error("Error fetching user profile:", error);
     return null;
@@ -364,9 +362,3 @@ export async function submitBid(listingId, bidAmount) {
   }
 }
 
-export function logoutUser() {
-  localStorage.removeItem("jwt");
-  localStorage.removeItem("user_name");
-  localStorage.removeItem("credits");
-  localStorage.removeItem("avatar");
-}

@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import logoutFunction from "../libs/api"
-import getProfile from "../libs/api"
+import { getProfile } from "../libs/api";
 
 const AuthContext = createContext({
   user: null,
@@ -13,31 +12,30 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const fetchUserData = async () => {
-    const token = window.localStorage.getItem("jwt");
-    const name = window.localStorage.getItem("user_name");
-
-    if (token && name) {
-      try {
-        const userData = await getProfile(name);
-        if (userData) {
-          setUser(userData);
-          setIsLoggedIn(true);
-          console.log("userData", userData);
-        } else {
-          console.error("Failed to fetch user data.");
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    }
-  };
-
-  // Call fetchUserData directly when AuthProvider is rendered
   useEffect(() => {
+    const fetchUserData = async () => {
+      const token = window.localStorage.getItem("jwt");
+      const name = window.localStorage.getItem("user_name");
+
+      if (token && name) {
+        try {
+          const userData = await getProfile(name);
+          console.log("Fetched userData:", userData);
+
+          if (userData) {
+            setUser(userData);
+            setIsLoggedIn(true);
+          } else {
+            console.error("Failed to fetch user data.");
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
+
     fetchUserData();
-  }, []);
-    
+  }, []); // Empty dependency array ensures it only runs once after the initial render
 
   const login = (userData) => {
     window.localStorage.setItem("jwt", userData.accessToken);
@@ -46,13 +44,15 @@ export const AuthProvider = ({ children }) => {
     window.localStorage.setItem("user_avatar", userData.avatar);
     window.localStorage.setItem("user_credits", userData.credits);
     setUser(userData);
-    setIsLoggedIn(true)
+    setIsLoggedIn(true);
   };
 
   const logout = () => {
-    logoutFunction();
     setUser(null);
-    console.log("User logged out");
+    localStorage.removeItem("jwt");
+    localStorage.removeItem("user_name");
+    localStorage.removeItem("user_credits"); 
+    localStorage.removeItem("user_avatar");  
   };
 
   return (
@@ -61,7 +61,6 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-
 
 export const useAuth = () => {
   return useContext(AuthContext);
