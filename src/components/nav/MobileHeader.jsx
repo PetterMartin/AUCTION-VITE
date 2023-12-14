@@ -1,16 +1,48 @@
 import { useState } from "react";
+import { useAuth } from "../AuthContext";
 import { AiOutlineMenu } from "react-icons/ai";
+import { BiLogInCircle } from "react-icons/bi";
+import { BiLogOutCircle } from "react-icons/bi";
+import RegisterModal from "../modal/RegisterModal";
+import LoginModal from "../modal/LoginModal";
 import logo from "../../assets/New-Logo.svg";
 import defaultUser from "../../assets/defaultUser.png";
 
 export default function MobileHeader() {
-    const [isDropdownOpen, setDropdownOpen] = useState(false);
-  
-    const handleDropdownToggle = () => {
-      setDropdownOpen(!isDropdownOpen);
-    };
-  
-    return (
+  const auth = useAuth();
+  const user = auth.user;
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+
+  const handleDropdownToggle = () => {
+    setDropdownOpen(!isDropdownOpen);
+  };
+
+  const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
+  const openRegisterModal = () => {
+    setRegisterModalOpen(true);
+  };
+
+  const [isLoginModalOpen, setLoginModalOpen] = useState(false);
+  const openLoginModal = () => {
+    setLoginModalOpen(true);
+  };
+
+  const handleLogout = () => {
+    auth.logout();
+  };
+
+  return (
+    <>
+      <RegisterModal
+        isModalOpen={isRegisterModalOpen}
+        setModalOpen={setRegisterModalOpen}
+        openLoginModal={openLoginModal}
+      />
+      <LoginModal
+        isModalOpen={isLoginModalOpen}
+        setModalOpen={setLoginModalOpen}
+        openRegisterModal={openRegisterModal}
+      />
       <div className="flex flex-row justify-between pt-4 px-4 xl:hidden">
         <img src={logo} alt="Logo" className="w-12 h-12" />
         <div
@@ -21,21 +53,52 @@ export default function MobileHeader() {
           <div
             className={`bg-white border rounded-md shadow-md w-24 text-lg absolute top-full left-0 transition-all ${
               isDropdownOpen
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 -translate-y-2"
+                ? "block opacity-100 translate-y-3"
+                : "opacity-0 pointer-events-none -translate-y-2"
             } z-50`}
           >
-            <div className="p-2">Login</div>
-            <div className="p-2">Sign up</div>
+            {user ? (
+              <>
+                <div
+                  className="flex p-2 text-rose-500 gap-1"
+                  onClick={handleLogout}
+                >
+                  <div>Logout</div>
+                  <BiLogOutCircle className="text-xl mt-1" />
+                </div>
+              </>
+            ) : (
+              <>
+                <div
+                  className="flex gap-1 p-2 text-emerald-500"
+                  onClick={openLoginModal}
+                >
+                  <div>Login</div>
+                  <BiLogInCircle className="text-xl mt-1" />
+                </div>
+                <div className="p-2" onClick={openRegisterModal}>
+                  <div>Sign up</div>
+                </div>
+              </>
+            )}
           </div>
           <div className="">
-            <img
-              src={defaultUser}
-              alt="User Image"
-              className="w-10 h-10 rounded-full"
-            />
+            {user && user.avatar ? (
+              <img
+                src={user.avatar}
+                alt="User Image"
+                className="w-10 h-10 rounded-full"
+              />
+            ) : (
+              <img
+                src={defaultUser}
+                alt="User Image"
+                className="w-10 h-10 rounded-full"
+              />
+            )}
           </div>
         </div>
       </div>
-    );
-  }
+    </>
+  );
+}

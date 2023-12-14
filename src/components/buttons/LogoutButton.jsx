@@ -26,7 +26,7 @@ export default function LogoutButton({ setUser }) {
     <>
       <button
         onClick={handleLogout}
-        className="flex gap-4 w-full logout-button hover:bg-gray-100/50 p-3 whitespace-nowrap text-red-500"
+        className="flex gap-4 w-full logout-button hover:bg-gray-100/50 p-3 whitespace-nowrap text-rose-500"
       >
         <div>Logout</div>
         <BiLogOutCircle className="text-xl me-8" />
