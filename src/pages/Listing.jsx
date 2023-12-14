@@ -225,28 +225,31 @@ export default function Listing() {
           {/* Left Side */}
           <div className="col-span-4 flex flex-col gap-5">
             <div className="flex flex-col gap-1">
-            <Link to={`/profile?name=${profile.name}`} className="listing-link">
-                <div className="text-xl font-semibold flex flex-row items-center gap-3">
-                  <img
-                    src={profile.avatar || defaultImage}
-                    alt={`${profile.name}'s Avatar`}
-                    style={{
-                      width: "60px",
-                      height: "60px",
-                      borderRadius: "50%",
-                    }}
-                  />
-                  <div className="flex flex-col text-blue-500">
-                    <div>{profile.name}</div>
-                    <div className="flex flex-row gap-1">
-                      <RiShieldCheckFill size={20} />
-                      <div className="text-sm font-light">
-                        Verified with BankId
-                      </div>
+              <div className="text-xl font-semibold flex flex-row items-center gap-3">
+                <img
+                  src={profile.avatar || defaultImage}
+                  alt={`${profile.name}'s Avatar`}
+                  style={{
+                    width: "60px",
+                    height: "60px",
+                    borderRadius: "50%",
+                  }}
+                />
+                <div className="flex flex-col text-blue-500">
+                  <Link
+                    to={`/profile?name=${profile.name}`}
+                    className="listing-link"
+                  >
+                    <div className="hover:text-blue-700">{profile.name}</div>
+                  </Link>
+                  <div className="flex flex-row gap-1">
+                    <RiShieldCheckFill size={20} />
+                    <div className="text-sm font-light">
+                      Verified with BankId
                     </div>
                   </div>
                 </div>
-              </Link>
+              </div>
             </div>
             <hr />
             <div className="text-lg font-light text-neutral-500 overflow-hidden">
@@ -344,14 +347,19 @@ export default function Listing() {
                       className="mt-1"
                     />
                     <div className="flex flex-col text-blue-500">
-                      <div className="text-lg font-semibold">
-                        {bid.bidderName}
-                        {index === 0 && (
-                          <span className="italic font-thin text-emerald-400 ms-4">
-                            - Top Bidder
-                          </span>
-                        )}
-                      </div>
+                      <Link
+                        to={`/profile?name=${bid.bidderName}`}
+                        className="listing-link"
+                      >
+                        <div className="flex text-lg font-semibold">
+                          <div className="hover:text-blue-700">{bid.bidderName}</div>
+                          {index === 0 && (
+                            <span className="italic font-thin text-emerald-400 ms-4">
+                              - Top Bidder
+                            </span>
+                          )}
+                        </div>
+                      </Link>
                       <div className="flex flex-row gap-2">
                         <FaBitcoin
                           size={20}
