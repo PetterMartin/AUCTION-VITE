@@ -46,6 +46,7 @@ export default function MobileHeader() {
       <div className="flex flex-row justify-between pt-4 px-4 xl:hidden">
         <img src={logo} alt="Logo" className="w-12 h-12" />
         <div
+          data-cy="expand-btn"
           className="px-4 py-1 border-[1px] border-neutral-200 flex items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition relative"
           onClick={handleDropdownToggle}
         >
@@ -60,6 +61,7 @@ export default function MobileHeader() {
             {user ? (
               <>
                 <div
+                  data-cy="logout-btn"
                   className="flex p-2 text-rose-500 gap-1"
                   onClick={handleLogout}
                 >
@@ -74,7 +76,10 @@ export default function MobileHeader() {
                   onClick={openLoginModal}
                 >
                   <div>Login</div>
-                  <BiLogInCircle className="text-xl mt-1" />
+                  <BiLogInCircle
+                    data-cy="open-login-form"
+                    className=" text-xl mt-1"
+                  />
                 </div>
                 <div className="p-2" onClick={openRegisterModal}>
                   <div>Sign up</div>
@@ -85,6 +90,7 @@ export default function MobileHeader() {
           <div className="">
             {user && user.avatar ? (
               <img
+                data-cy="user-avatar"
                 src={user.avatar}
                 alt="User Image"
                 className="w-10 h-10 rounded-full"

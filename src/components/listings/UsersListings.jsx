@@ -53,20 +53,20 @@ function UsersListings() {
         {listings.map(({ id, title, description, media, endsAt, bids }) => (
           <div key={id} className="relative">
             {userId && user && userId === user.name && (
-              <div className="flex absolute top-7 left-8 z-10 gap-2 bg-white text-gray-800 py-2 px-4 rounded-full text-sm font-semibold border-2 hover:bg-gray-100 cursor-pointer">
-                <div
-                  className="flex items-center"
-                  onClick={() =>
-                    openEditModal({
-                      id,
-                      title,
-                      description,
-                      media,
-                      bids,
-                      endsAt,
-                    })
-                  }
-                >
+              <div
+                onClick={() =>
+                  openEditModal({
+                    id,
+                    title,
+                    description,
+                    media,
+                    bids,
+                    endsAt,
+                  })
+                }
+                className="flex absolute top-7 left-8 z-10 gap-2 bg-white text-gray-800 py-2 px-4 rounded-full text-sm font-semibold border-2 hover:bg-gray-100 cursor-pointer"
+              >
+                <div className="flex items-center">
                   Edit <FaEdit size={15} className="mt-0.5 ml-2" />
                 </div>
               </div>

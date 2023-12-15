@@ -171,8 +171,15 @@ export default function Listing() {
     <>
       <div className="max-w-screen-lg mx-auto pb-12">
         <div className="flex flex-col">
-          <h1 className="capitalize text-gray-800 font-semibold text-3xl mt-8">
-            {listing.title}
+          <h1 className="text-gray-800 font-semibold text-3xl mt-8">
+            {listing.title
+              .split(" ")
+              .map((word, index) =>
+                index === 0
+                  ? word.charAt(0).toUpperCase() + word.slice(1)
+                  : word
+              )
+              .join(" ")}
           </h1>
           <div className="font-light text-sm text-neutral-500">
             published on {formattedCreatedDate}
@@ -262,7 +269,7 @@ export default function Listing() {
           <div className="col-span-4 flex flex-col gap-5">
             <div className=" bg-white rounded-xl border-2 border-blue-500 overflow-hidden p-4">
               <div className="flex flex-row items-center gap-6 mb-2">
-                <div className="text-2xl font-semibold">
+                <div data-cy="current-bid" className="text-2xl font-semibold">
                   ${" "}
                   {listing._count.bids > 0
                     ? listing.bids.reduce(
@@ -309,12 +316,14 @@ export default function Listing() {
             <div className="flex flex-col gap-4 py-4">
               <div className="flex flex-row items-center gap-2">
                 <input
+                  data-cy="bid-input"
                   type="text"
                   value={bidAmount}
                   onChange={(e) => setBidAmount(e.target.value)}
                   className="border-2 rounded-md px-5 py-3 text-sm hover:border-blue-400 cursor-pointer"
                 />
                 <button
+                  data-cy="place-bid-btn"
                   onClick={handleBidSubmit}
                   className="bg-gradient-to-b from-blue-600 to-blue-500 text-white px-5 py-3 font-semibold rounded-md transition duration-200 ease-in-out hover:opacity-80"
                 >
@@ -352,7 +361,9 @@ export default function Listing() {
                         className="listing-link"
                       >
                         <div className="flex text-lg font-semibold">
-                          <div className="hover:text-blue-700">{bid.bidderName}</div>
+                          <div className="hover:text-blue-700">
+                            {bid.bidderName}
+                          </div>
                           {index === 0 && (
                             <span className="italic font-thin text-emerald-400 ms-4">
                               - Top Bidder

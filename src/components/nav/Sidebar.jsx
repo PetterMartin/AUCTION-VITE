@@ -202,7 +202,7 @@ export default function Sidebar() {
               ) : (
                 <div
                   onClick={openLoginModal}
-                  className="flex gap-6 hover:bg-gray-100/50 p-3 whitespace-nowrap text-emerald-500"
+                  className=" flex gap-6 hover:bg-gray-100/50 p-3 whitespace-nowrap text-emerald-500"
                 >
                   <div>Login</div>
                   <BiLogInCircle className="text-xl me-8" />

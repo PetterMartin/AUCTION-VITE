@@ -40,26 +40,28 @@ const LoginModal = ({ isModalOpen, setModalOpen }) => {
 
   const handleLogin = async () => {
     try {
-        setLoginStatus("loading");
+      setLoginStatus("loading");
 
-        const loginData = await loginUser(inputValues.email, inputValues.password);
+      const loginData = await loginUser(
+        inputValues.email,
+        inputValues.password
+      );
 
-        // Use loginData.accessToken instead of data.accessToken
-        login(loginData);
+      // Use loginData.accessToken instead of data.accessToken
+      login(loginData);
 
-        // Set the user ID and access token separately
-        localStorage.setItem("jwt", loginData.accessToken);
-        localStorage.setItem("user_name", loginData.name);
+      // Set the user ID and access token separately
+      localStorage.setItem("jwt", loginData.accessToken);
+      localStorage.setItem("user_name", loginData.name);
 
-
-        setLoginStatus("success");
-        setModalOpen(false);
-        console.log("Login successful:", loginData);
+      setLoginStatus("success");
+      setModalOpen(false);
+      console.log("Login successful:", loginData);
     } catch (error) {
-        console.error("Login failed:", error.message);
-        setLoginStatus("error");
+      console.error("Login failed:", error.message);
+      setLoginStatus("error");
     }
-};
+  };
 
   useEffect(() => {
     if (isModalOpen) {
@@ -106,6 +108,7 @@ const LoginModal = ({ isModalOpen, setModalOpen }) => {
                   {labels.map((label, index) => (
                     <div className="w-full relative mb-6" key={index}>
                       <input
+                      data-cy={label}
                         type={
                           label.toLowerCase() === "email" ? "email" : "text"
                         }
@@ -159,6 +162,7 @@ const LoginModal = ({ isModalOpen, setModalOpen }) => {
                   ) : (
                     // Render login form
                     <button
+                      data-cy="login-btn"
                       className="w-full p-4 bg-gradient-to-b from-blue-600 to-blue-500 text-white font-semibold rounded-md transition duration-200 ease-in-out hover:opacity-80"
                       onClick={handleLogin}
                     >

@@ -42,10 +42,12 @@ export default function Searchbar({ onSearch }) {
   return (
     <div className="header pt-4 xl:pt-12 pb-6 z-10 relative">
       <div
+        data-cy="searchbar"
         className="search flex items-center justify-between border-2 border-blue-100 rounded-lg ps-5 hover:border-blue-400 focus-within:border-blue-400 relative"
         onClick={toggleDropdown}
       >
         <input
+          data-cy="search-input"
           type="text"
           placeholder="Search Listings"
           className="bg-transparent outline-none flex-grow py-2"
@@ -68,6 +70,7 @@ export default function Searchbar({ onSearch }) {
           </button>
         )}
         <button
+        data-cy="search-btn"
           className="bg-gradient-to-b from-blue-600 to-blue-500 rounded-r bg-primary px-4 py-2.5 font-medium uppercase leading-tight text-white shadow-md hover:bg-primary-700 hover:shadow-lg focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg"
           type="button"
           id="button-addon1"

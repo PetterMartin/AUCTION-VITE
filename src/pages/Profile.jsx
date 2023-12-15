@@ -93,7 +93,7 @@ export default function Profile() {
             {userId && isAuthenticated && authUser && userId === authUser.name && (
               <button
                 onClick={handleChangeImage}
-                className="absolute bottom-[-15px] p-2.5 rounded-full z-10 border-4 border-white bg-gradient-to-r from-blue-600 to-blue-500 text-white"
+                className="absolute bottom-[-15px] p-2.5 rounded-full z-10 border-4 border-white bg-gradient-to-r from-blue-600 to-blue-500  text-white transform transition-transform hover:scale-110"
               >
                 <FaEdit size={15} />
               </button>
