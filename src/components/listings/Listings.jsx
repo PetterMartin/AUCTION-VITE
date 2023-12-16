@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { fetchAllListings } from "../../libs/api";
 import { FaRegClock } from "react-icons/fa6";
+import { Toaster, toast } from 'sonner'
+import { useAuth } from "../AuthContext";
 import NoImage from "../../assets/No-Image.png";
 import HeartButton from "../buttons/HeartButton";
 
 function Listings({ searchQuery }) {
+  const { isLoggedIn } = useAuth();
   const [listings, setListings] = useState([]);
 
   useEffect(() => {
@@ -117,10 +120,11 @@ function Listings({ searchQuery }) {
 
           return (
             <>
-              <div data-cy="listing" className="relative">
-                <div className="absolute top-8 right-8 z-10">
-                  <HeartButton />
-                </div>
+            <div key={id} data-cy="listing" className="relative">
+              <div className="absolute top-8 right-8 z-10">
+                <HeartButton />
+              </div>
+              {isLoggedIn ? (
                 <Link
                   to={`/listing?id=${id}`}
                   key={id}
@@ -156,31 +160,85 @@ function Listings({ searchQuery }) {
                         )}
                       </div>
                     </div>
-                    <div className="flex flex-col gap-2 px-2">
+                    <div className="flex justify-between mt-3 gap-2 px-4">
                       <div
                         data-cy="listing-title"
-                        className="font-semibold text-xl text-gray-700 mt-3"
+                        className="font-semibold text-xl text-gray-700"
                       >
                         {title}
                       </div>
+                      <div className=" text-xl font-semibold text-blue-500">{`$ ${
+                        bids.length > 0
+                          ? sortBidsByCreationTime(bids)[0].amount
+                          : 0
+                      }`}</div>
                       <div
                         data-cy="listing-description"
-                        className="invisible text-gray-500 text-sm mt-2"
+                        className="hidden text-gray-500 text-sm mt-2"
                       >
                         {description}
-                      </div>
-                      <div className="flex font-semibold justify-between">
-                        <div className="text-lg text-neutral-500">Price</div>
-                        <div className="text-xl text-blue-400">{`$ ${
-                          bids.length > 0
-                            ? sortBidsByCreationTime(bids)[0].amount
-                            : 0
-                        }`}</div>
                       </div>
                     </div>
                   </div>
                 </Link>
-              </div>
+              ) : (
+                <div
+                  className="listing-link cursor-pointer"
+                  onClick={() => toast.error('Must be logged in to view listings')}
+                >
+
+                  <div className="listing-item overflow-hidden border p-4 rounded-3xl shadow-xl">
+                    <div className="aspect-square w-full relative overflow-hidden rounded-xl ">
+                      <img
+                        src={media[0] ? media[0] : NoImage}
+                        alt="Listing Image"
+                        className="object-cover w-full h-full hover:scale-110 transition"
+                      />
+                      <div
+                        className={`flex gap-3 absolute top-3 left-3 bg-white py-2 px-4 rounded-full text-sm font-semibold border-2 ${
+                          (countdown.days === 0 && countdown.hours <= 1) ||
+                          (countdown.days === 0 &&
+                            countdown.hours === 0 &&
+                            countdown.minutes === 0 &&
+                            countdown.seconds === 0)
+                            ? "text-rose-400"
+                            : "text-blue-400"
+                        }`}
+                      >
+                        <FaRegClock size={18} className="mt-0.5" />
+                        {countdown.days === 0 &&
+                        countdown.hours === 0 &&
+                        countdown.minutes === 0 &&
+                        countdown.seconds === 0 ? (
+                          <span>Auction Finished</span>
+                        ) : (
+                          <span>{formattedCountdown}</span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex justify-between mt-3 gap-2 px-4">
+                      <div
+                        data-cy="listing-title"
+                        className="font-semibold text-xl text-gray-700"
+                      >
+                        {title}
+                      </div>
+                      <div className=" text-xl font-semibold text-blue-500">{`$ ${
+                        bids.length > 0
+                          ? sortBidsByCreationTime(bids)[0].amount
+                          : 0
+                      }`}</div>
+                      <div
+                        data-cy="listing-description"
+                        className="hidden text-gray-500 text-sm mt-2"
+                      >
+                        {description}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
             </>
           );
         })}

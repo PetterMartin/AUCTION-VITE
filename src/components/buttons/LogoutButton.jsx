@@ -17,7 +17,7 @@ export default function LogoutButton({ setUser }) {
     // Reset the user state to null to ensure it reflects immediately in the UI
     setUser(null);
 
-    toast("You have successfully Logged out", {
+    toast.success("You have successfully Logged out", {
       duration: 5000, // Optional, how long the toast should be displayed
     });
   };

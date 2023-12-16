@@ -51,6 +51,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     localStorage.removeItem("jwt");
     localStorage.removeItem("user_name");
+    window.localStorage.removeItem("user_email");
     localStorage.removeItem("user_credits"); 
     localStorage.removeItem("user_avatar");  
   };
