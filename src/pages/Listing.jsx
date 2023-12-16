@@ -8,6 +8,7 @@ import { GrHistory } from "react-icons/gr";
 import HeartButton from "../components/buttons/HeartButton";
 import Map from "../components/buttons/Map";
 import defaultImage from "../assets/defaultUser.png";
+import Loader from "../components/loader/Loader";
 
 export default function Listing() {
   const [listing, setListing] = useState(null);
@@ -17,6 +18,7 @@ export default function Listing() {
   const [formattedCreatedDate, setFormattedCreatedDate] = useState(null);
   const [bidAmount, setBidAmount] = useState("");
   const [bidErrorMessage, setBidErrorMessage] = useState("");
+  const [isListingLoading, setIsListingLoading] = useState(true);
 
   const handleImageClick = (index) => {
     const temp = listing.media[0];
@@ -35,17 +37,17 @@ export default function Listing() {
       try {
         const listingData = await fetchListingById(id);
         setListing(listingData);
-
+  
         // Fetch profile data when listing data is available
         const profileData = await fetchProfileByName(listingData.seller.name);
         setProfile(profileData);
-
+  
         const sortedBids = listingData.bids.sort((a, b) => b.amount - a.amount);
         setListing({
           ...listingData,
           bids: sortedBids,
         });
-
+  
         // Convert created date to a formatted string
         const createdDate = new Date(listingData.created);
         const formattedDate = createdDate.toLocaleDateString("en-US", {
@@ -54,16 +56,18 @@ export default function Listing() {
           day: "numeric",
         });
         setFormattedCreatedDate(formattedDate);
-
+  
         // Calculate the initial countdown
         calculateCountdown(listingData.endsAt);
-
+  
         // Update the countdown every second
         intervalId = setInterval(() => {
           calculateCountdown(listingData.endsAt);
         }, 1000);
       } catch (error) {
         console.error("Error fetching listing:", error);
+      } finally {
+        setIsListingLoading(false); // Set loading state to false when done loading
       }
     };
 
@@ -162,8 +166,9 @@ export default function Listing() {
   };
 
   if (!listing || !profile || !countdown || !formattedCreatedDate) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
+
 
   const padWithZero = (number) => String(number).padStart(2, "0");
 

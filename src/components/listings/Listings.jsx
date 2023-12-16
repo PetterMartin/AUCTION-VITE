@@ -6,16 +6,17 @@ import { Toaster, toast } from 'sonner'
 import { useAuth } from "../AuthContext";
 import NoImage from "../../assets/No-Image.png";
 import HeartButton from "../buttons/HeartButton";
+import Loader from "../loader/Loader";
 
 function Listings({ searchQuery }) {
   const { isLoggedIn } = useAuth();
   const [listings, setListings] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await fetchAllListings();
-        console.log("Fetched data:", data);
 
         // Filter listings based on searchQuery
         const filteredListings = data.filter(
@@ -30,6 +31,8 @@ function Listings({ searchQuery }) {
         setListings(filteredListings.slice(0, 20));
       } catch (error) {
         console.error("Error fetching listings:", error);
+      } finally {
+        setIsLoading(false); // Set loading state to false when done loading
       }
     };
 
@@ -112,6 +115,8 @@ function Listings({ searchQuery }) {
   return (
     <main className="container mx-auto lg:px-20 mt-4">
       <hr className="my-8 border border-blue-500" />
+
+      {isLoading && <Loader />}
 
       <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-4">
         {listings.map(({ id, title, description, media, endsAt, bids }) => {

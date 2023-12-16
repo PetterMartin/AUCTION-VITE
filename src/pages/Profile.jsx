@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { getProfile, updateProfileImage } from "../libs/api";
-import { FaEdit } from 'react-icons/fa';
+import { FaEdit } from "react-icons/fa";
 import defaultUser from "../assets/defaultUser.png";
 import UsersListings from "../components/listings/UsersListings";
 import { useAuth } from "../components/AuthContext";
+import Loader from "../components/loader/Loader";
 
 export default function Profile() {
   const { user: authUser } = useAuth();
@@ -15,6 +16,7 @@ export default function Profile() {
   const [showImageModal, setShowImageModal] = useState(false);
   const [newImageUrl, setNewImageUrl] = useState("");
   const [profileImageUrl, setProfileImageUrl] = useState("");
+  const [isProfileLoading, setIsProfileLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -27,16 +29,20 @@ export default function Profile() {
 
             setUser(profileData);
             setCreditInfo({ credits: profileData.credits, currency: "USD" });
-            setProfileImageUrl(profileData.avatar || defaultUser); 
+            setProfileImageUrl(profileData.avatar || defaultUser);
             setIsAuthenticated(true);
           } catch (error) {
             console.error("Error fetching user profile:", error.message);
+          } finally {
+            setIsProfileLoading(false); // Set loading state to false when done loading
           }
         } else {
           setIsAuthenticated(false);
+          setIsProfileLoading(false); // Set loading state to false if conditions are not met
         }
       } catch (error) {
         console.error("Error fetching user profile:", error);
+        setIsProfileLoading(false); // Set loading state to false in case of an error
       }
     };
 
@@ -74,6 +80,10 @@ export default function Profile() {
     }
   };
 
+  if (isProfileLoading) {
+    return <Loader />;
+  }
+
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="flex items-center gap-8 p-8">
@@ -90,14 +100,17 @@ export default function Profile() {
                 />
               </div>
             </div>
-            {userId && isAuthenticated && authUser && userId === authUser.name && (
-              <button
-                onClick={handleChangeImage}
-                className="absolute bottom-[-15px] p-2.5 rounded-full z-10 border-4 border-white bg-gradient-to-r from-blue-600 to-blue-500  text-white transform transition-transform hover:scale-110"
-              >
-                <FaEdit size={15} />
-              </button>
-            )}
+            {userId &&
+              isAuthenticated &&
+              authUser &&
+              userId === authUser.name && (
+                <button
+                  onClick={handleChangeImage}
+                  className="absolute bottom-[-15px] p-2.5 rounded-full z-10 border-4 border-white bg-gradient-to-r from-blue-600 to-blue-500  text-white transform transition-transform hover:scale-110"
+                >
+                  <FaEdit size={15} />
+                </button>
+              )}
           </div>
         </div>
 
