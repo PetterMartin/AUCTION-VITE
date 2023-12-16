@@ -133,7 +133,6 @@ export async function deleteListing(listingId) {
     const response = await fetch(url, options);
 
     if (response.ok) {
-      console.log(`Listing with ID ${listingId} deleted successfully`);
       // Optionally return some data from the response if needed
       const data = await response.json();
       return data;
@@ -224,7 +223,6 @@ export async function getProfile(userName) {
     }
 
     const userProfile = await response.json(); 
-    console.log(userProfile)// Extract JSON data here
     return userProfile;
   } catch (error) {
     console.error("Error fetching user profile:", error);
@@ -340,9 +338,6 @@ export async function submitBid(listingId, bidAmount) {
 
   try {
     const response = await fetch(url, options);
-
-    // Log the entire response for debugging
-    console.log("Bid response:", response);
 
     if (response.ok) {
       const data = await response.json();

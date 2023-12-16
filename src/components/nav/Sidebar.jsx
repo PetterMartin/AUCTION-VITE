@@ -63,7 +63,6 @@ export default function Sidebar() {
             console.error("Error fetching user profile:", error.message);
           }
         } else {
-          // If no user or token is present, set isAuthenticated to false
           setIsAuthenticated(false);
         }
       } catch (error) {
@@ -76,17 +75,11 @@ export default function Sidebar() {
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
-      // Check if the clicked element is inside the sidebar
       if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-        // Click is outside the sidebar, collapse it
         setExpanded(false);
       }
     };
-
-    // Attach the event listener to the document
     document.addEventListener("click", handleOutsideClick);
-
-    // Cleanup the event listener on component unmount
     return () => {
       document.removeEventListener("click", handleOutsideClick);
     };

@@ -22,7 +22,6 @@ export default function Searchbar({ onSearch }) {
   };
 
   const handleSearch = () => {
-    console.log("Search query:", searchQuery);
     onSearch(searchQuery);
 
     // Update latest searches
@@ -40,7 +39,7 @@ export default function Searchbar({ onSearch }) {
   };
 
   return (
-    <div className="header pt-4 xl:pt-12 pb-6 z-10 relative">
+    <div className="header pt-4 xl:pt-12 pb-4 z-10 relative">
       <div
         data-cy="searchbar"
         className="search flex items-center justify-between border-2 border-blue-100 rounded-lg ps-5 hover:border-blue-400 focus-within:border-blue-400 relative"
@@ -98,21 +97,6 @@ export default function Searchbar({ onSearch }) {
                 {search}
               </p>
             ))}
-          </div>
-          <h2 className="text-lg mt-6 mb-2">Populært på Finn</h2>
-          <div className="flex gap-6 overflow-scroll">
-            <p className="bg-gray-200 p-2 px-4 rounded-3xl hover:underline border hover:border hover:border-gray-400 cursor-pointer">
-              Lenestol
-            </p>
-            <p className="bg-gray-200 p-2 px-4 rounded-3xl hover:underline border hover:border hover:border-gray-400 cursor-pointer">
-              Pokemonkort
-            </p>
-            <p className="bg-gray-200 p-2 px-4 rounded-3xl hover:underline border hover:border hover:border-gray-400 cursor-pointer">
-              Skrivebord
-            </p>
-            <p className="bg-gray-200 p-2 px-4 rounded-3xl hover:underline border hover:border hover:border-gray-400 cursor-pointer">
-              TV
-            </p>
           </div>
         </div>
       )}

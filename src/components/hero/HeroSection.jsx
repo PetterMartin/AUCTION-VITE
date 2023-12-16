@@ -8,13 +8,25 @@ import Categories from "./Categories";
 
 const HeroSection = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
 
   const handleSearch = (query) => {
     setSearchQuery(query);
   };
 
-  const handleHomeClick = () => {
+  const handleClearSearch = () => {
     setSearchQuery("");
+    // Additional logic if needed
+  };
+
+  const handleHomeClick = () => {
+    handleClearSearch();
+    // Additional logic for handling home click
+  };
+
+  const handleCategoryClick = (category) => {
+    setSearchQuery(category); 
+    setSelectedCategory(category);
   };
 
   return (
@@ -22,9 +34,9 @@ const HeroSection = () => {
       <div className="lg:px-56 sm:px-28">
         <MobileHeader />
 
-        <Searchbar onSearch={handleSearch} onHomeClick={handleHomeClick} />
+        <Searchbar onSearch={handleSearch} onClearSearch={handleClearSearch} />
 
-        <Categories />
+        <Categories onCategoryClick={handleCategoryClick} />
       </div>
 
       {searchQuery === "" && (

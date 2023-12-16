@@ -20,7 +20,6 @@ export const AuthProvider = ({ children }) => {
       if (token && name) {
         try {
           const userData = await getProfile(name);
-          console.log("Fetched userData:", userData);
 
           if (userData) {
             setUser(userData);
