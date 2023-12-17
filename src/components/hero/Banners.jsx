@@ -78,51 +78,53 @@ export default function Banners() {
           </div>
         )}
 
-        {isLoggedIn && (
-          <div className="relative w-full bg-gradient-to-b from-emerald-500 to-emerald-400 py-8 px-24 rounded-2xl">
-            <div className="flex justify-between items-center text-white text-2xl">
-              <div>
-                <motion.div
-                  className="text-8xl font-bold my-2"
-                  variants={headingAnimation}
-                  initial="hidden"
-                  animate={animationComplete ? "visible" : "hidden"}
-                >
-                  <p className="text-lg font-light">20% Off</p>
-                  <h1>WINTER</h1>
-                  <h1>SALE!</h1>
-                  <p className="text-lg font-light">28 Nov To 31 Dec</p>
-                </motion.div>
-              </div>
-              <div className="me-12">
-                <motion.div
-                  className="text-8xl font-bold my-2"
-                  variants={headingAnimation}
-                  initial="hidden"
-                  animate={animationComplete ? "visible" : "hidden"}
-                >
-                  <p className="text-lg font-light">Beats Pro max</p>
-                  <h2 className="text-4xl font-semibold my-2">Devices</h2>
-                  <h1 className="text-6xl font-bold text-emerald-200">
-                    OCULUS
-                  </h1>
-                  <button className="bg-white rounded-full px-6 py-2 text-emerald-500 text-lg hover:bg-gray-100">
-                    Browse
-                  </button>
-                </motion.div>
-              </div>
-              <motion.img
-                src={vr}
-                alt="VR-Image"
-                style={{ width: "auto", height: "350px" }}
-                className="absolute right-[400px] bottom-0 z-10"
-                variants={imgAnimation}
-                initial="hidden"
-                animate={animationComplete ? "visible" : "hidden"}
-              />
-            </div>
-          </div>
-        )}
+{isLoggedIn && (
+  <div className="relative w-full bg-gradient-to-b from-emerald-500 to-emerald-400 py-8 px-24 rounded-2xl">
+    <div className="overflow-hidden">
+      <div className="flex justify-between items-center text-white text-2xl">
+        <div>
+          <motion.div
+            className="text-8xl font-bold my-2"
+            variants={headingAnimation}
+            initial="hidden"
+            animate={animationComplete ? "visible" : "hidden"}
+          >
+            <p className="text-lg font-light">20% Off</p>
+            <h1>WINTER</h1>
+            <h1>SALE!</h1>
+            <p className="text-lg font-light">28 Nov To 31 Dec</p>
+          </motion.div>
+        </div>
+        <div className="me-12">
+          <motion.div
+            className="text-8xl font-bold my-2"
+            variants={headingAnimation}
+            initial="hidden"
+            animate={animationComplete ? "visible" : "hidden"}
+          >
+            <p className="text-lg font-light">Beats Pro max</p>
+            <h2 className="text-4xl font-semibold my-2">Devices</h2>
+            <h1 className="text-6xl font-bold text-emerald-200">
+              OCULUS
+            </h1>
+            <button className="bg-white rounded-full px-6 py-2 text-emerald-500 text-lg hover:bg-gray-100">
+              Browse
+            </button>
+          </motion.div>
+        </div>
+        <motion.img
+          src={vr}
+          alt="VR-Image"
+          style={{ width: "auto", height: "350px" }}
+          className="absolute right-[400px] bottom-0 z-10"
+          variants={imgAnimation}
+          initial="hidden"
+          animate={animationComplete ? "visible" : "hidden"}
+        />
+      </div>
+    </div>
+  </div>
+)}
 
         <RegisterModal
           isModalOpen={isRegisterModalOpen}
