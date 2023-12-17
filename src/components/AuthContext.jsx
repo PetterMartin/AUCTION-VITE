@@ -16,11 +16,11 @@ export const AuthProvider = ({ children }) => {
     const fetchUserData = async () => {
       const token = window.localStorage.getItem("jwt");
       const name = window.localStorage.getItem("user_name");
-
+  
       if (token && name) {
         try {
           const userData = await getProfile(name);
-
+  
           if (userData) {
             setUser(userData);
             setIsLoggedIn(true);
@@ -30,29 +30,34 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
           console.error("Error fetching user data:", error);
         }
+      } else {
+        setUser(null);
+        setIsLoggedIn(false);
       }
     };
-
+  
     fetchUserData();
-  }, []); // Empty dependency array ensures it only runs once after the initial render
+  }, [isLoggedIn]);
+  
 
-  const login = (userData) => {
+  const login = async (userData) => {
     window.localStorage.setItem("jwt", userData.accessToken);
     window.localStorage.setItem("user_email", userData.email);
     window.localStorage.setItem("user_name", userData.name);
     window.localStorage.setItem("user_avatar", userData.avatar);
     window.localStorage.setItem("user_credits", userData.credits);
-    setUser(userData);
-    setIsLoggedIn(true);
+    await setUser(userData);
+    await setIsLoggedIn(true);
   };
 
-  const logout = () => {
-    setUser(null);
+  const logout = async () => {
+    await setUser(null);
     localStorage.removeItem("jwt");
     localStorage.removeItem("user_name");
     window.localStorage.removeItem("user_email");
-    localStorage.removeItem("user_credits"); 
-    localStorage.removeItem("user_avatar");  
+    localStorage.removeItem("user_credits");
+    localStorage.removeItem("user_avatar");
+    await setIsLoggedIn(false);
   };
 
   return (

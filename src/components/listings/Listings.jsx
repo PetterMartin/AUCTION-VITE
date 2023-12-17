@@ -12,6 +12,7 @@ function Listings({ searchQuery }) {
   const { isLoggedIn } = useAuth();
   const [listings, setListings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [displayCount, setDisplayCount] = useState(20);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,11 +32,11 @@ function Listings({ searchQuery }) {
               ))
         );
 
-        setListings(filteredListings.slice(0, 20));
+        setListings(filteredListings.slice(0, displayCount));
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching listings:", error);
-      } finally {
-        setIsLoading(false); // Set loading state to false when done loading
+        setIsLoading(false);
       }
     };
 
@@ -56,7 +57,8 @@ function Listings({ searchQuery }) {
     const intervalId = setInterval(updateCountdowns, 1000);
 
     return () => clearInterval(intervalId);
-  }, [searchQuery]);
+  }, [searchQuery, displayCount]);
+
 
   const calculateCountdown = (endTime) => {
     const now = new Date().getTime();
@@ -115,8 +117,13 @@ function Listings({ searchQuery }) {
       .sort((a, b) => new Date(b.created) - new Date(a.created));
   };
 
+  const handleLoadMore = () => {
+    // Increase the number of listings to display by 10
+    setDisplayCount((prevCount) => prevCount + 10);
+  };
+
   return (
-    <main className="container mx-auto lg:px-20 mt-4">
+    <main className="container mx-auto lg:px-20 mt-4 pb-12">
       <hr className="my-8 border border-blue-500" />
 
       {isLoading && <Loader />}
@@ -133,6 +140,11 @@ function Listings({ searchQuery }) {
           ({ id, title, description, tags, media, endsAt, bids }) => {
             const countdown = calculateCountdown(endsAt);
             const formattedCountdown = formatCountdown(countdown);
+
+            if (!media || media.length === 0) {
+              return null;
+            }
+
 
             return (
               <div key={id} data-cy="listing" className="relative">
@@ -175,10 +187,10 @@ function Listings({ searchQuery }) {
                           )}
                         </div>
                       </div>
-                      <div className="flex justify-between mt-3 gap-2 px-4">
+                      <div className="flex justify-between mt-3 gap-2 px-4 ">
                         <div
                           data-cy="listing-title"
-                          className="font-semibold text-xl text-gray-700"
+                          className="font-semibold w-40 text-xl text-gray-700"
                         >
                           {title}
                         </div>
@@ -259,6 +271,17 @@ function Listings({ searchQuery }) {
           }
         )}
       </div>
+      {listings.length > 0 && (
+        <div className="text-center mt-4">
+          <button
+            className="text-blue-500 font-semibold hover:underline"
+            onClick={handleLoadMore}
+          >
+            Load More
+          </button>
+        </div>
+      )}
+
     </main>
   );
 }

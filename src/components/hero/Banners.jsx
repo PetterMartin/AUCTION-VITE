@@ -1,48 +1,128 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../AuthContext";
+import { motion, useAnimation } from "framer-motion";
+import vr from "../../assets/Vr.png";
 import headset from "../../assets/Headset.png";
 import speaker from "../../assets/Speaker.png";
 import chair from "../../assets/Chair.png";
 import RegisterModal from "../modal/RegisterModal";
 
 export default function Banners() {
-  const { isAuthenticated } = useAuth();
+  const { isLoggedIn } = useAuth();
   const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
+  const [animationComplete, setAnimationComplete] = useState(false);
+  const bannerControls = useAnimation();
+
+  useEffect(() => {
+    const animateBanner = async () => {
+      await bannerControls.start({ opacity: 1, y: 0 });
+      setAnimationComplete(true);
+    };
+
+    animateBanner();
+
+    return () => bannerControls.stop(); // Cleanup on component unmount
+  }, [bannerControls]);
+
+  const headingAnimation = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 1, delay: 0.5 } },
+  };
+
+  const imgAnimation = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 1, delay: 1.2 } },
+  };
 
   return (
     <>
       <div className="mx-auto px-4 sm:px-6 lg:px-8 mt-6 max-w-screen-xl hidden md:block">
-        <div className="relative w-full bg-gradient-to-b from-emerald-500 to-emerald-400 py-8 px-24 rounded-2xl">
-          <div className="flex justify-between items-center text-white text-2xl">
-            <div>
-              <p className="text-lg font-light">Limited-Time Offer</p>
-              <div className="text-8xl font-bold my-2">
-                <h1>SIGN UP</h1>
-                <h1>TODAY!</h1>
+        {!isLoggedIn && (
+          <div className="relative w-full bg-gradient-to-b from-emerald-500 to-emerald-400 py-8 px-24 rounded-2xl">
+            <div className="flex justify-between items-center text-white text-2xl">
+              <div>
+                <motion.div
+                  className="text-8xl font-bold my-2"
+                  variants={headingAnimation}
+                  initial="hidden"
+                  animate={animationComplete ? "visible" : "hidden"}
+                >
+                  <p className="text-lg font-light">Limited-Time Offer</p>
+                  <h1>SIGN UP</h1>
+                  <h1>TODAY!</h1>
+                  <p className="text-lg font-light">28 Nov To 31 Dec</p>
+                </motion.div>
               </div>
-              <p className="text-lg font-light">15 Nov To 7 Dec</p>
-            </div>
-            <div>
-              <p className="text-lg font-light">Electronics</p>
-              <h2 className="text-4xl font-semibold my-4">Welcome Gift</h2>
-              <p className="text-lg font-light">
-                To welcome new users, we are offering a gift of <br />
-                1000 credits for their first purchases for FREE
-              </p>
-              <button
-                className="bg-white rounded-full px-6 py-2 mt-4 text-emerald-500 text-lg hover:bg-gray-100"
-                onClick={() => setRegisterModalOpen(true)}
-              >
-                Sign Up
-              </button>
-              {isAuthenticated && (
-                <button className="bg-white rounded-full px-6 py-2 mt-4 text-emerald-500 text-lg hover:bg-gray-100">
-                  Browse
-                </button>
-              )}
+              <div>
+                <motion.div
+                  className="text-8xl font-bold my-2"
+                  variants={headingAnimation}
+                  initial="hidden"
+                  animate={animationComplete ? "visible" : "hidden"}
+                >
+                  <p className="text-lg font-light">Electronics</p>
+                  <h2 className="text-4xl font-semibold my-4">Welcome Gift</h2>
+                  <p className="text-lg font-light">
+                    To welcome new users, we are offering a gift of <br />
+                    1000 credits for their first purchases for FREE
+                  </p>
+                  <button
+                    className="bg-white rounded-full px-6 py-2 text-emerald-500 text-lg hover:bg-gray-100"
+                    onClick={() => setRegisterModalOpen(true)}
+                  >
+                    Sign Up
+                  </button>
+                </motion.div>
+              </div>
             </div>
           </div>
-        </div>
+        )}
+
+        {isLoggedIn && (
+          <div className="relative w-full bg-gradient-to-b from-emerald-500 to-emerald-400 py-8 px-24 rounded-2xl">
+            <div className="flex justify-between items-center text-white text-2xl">
+              <div>
+                <motion.div
+                  className="text-8xl font-bold my-2"
+                  variants={headingAnimation}
+                  initial="hidden"
+                  animate={animationComplete ? "visible" : "hidden"}
+                >
+                  <p className="text-lg font-light">20% Off</p>
+                  <h1>WINTER</h1>
+                  <h1>SALE!</h1>
+                  <p className="text-lg font-light">28 Nov To 31 Dec</p>
+                </motion.div>
+              </div>
+              <div className="me-12">
+                <motion.div
+                  className="text-8xl font-bold my-2"
+                  variants={headingAnimation}
+                  initial="hidden"
+                  animate={animationComplete ? "visible" : "hidden"}
+                >
+                  <p className="text-lg font-light">Beats Pro max</p>
+                  <h2 className="text-4xl font-semibold my-2">Devices</h2>
+                  <h1 className="text-6xl font-bold text-emerald-200">
+                    OCULUS
+                  </h1>
+                  <button className="bg-white rounded-full px-6 py-2 text-emerald-500 text-lg hover:bg-gray-100">
+                    Browse
+                  </button>
+                </motion.div>
+              </div>
+              <motion.img
+                src={vr}
+                alt="VR-Image"
+                style={{ width: "auto", height: "350px" }}
+                className="absolute right-[400px] bottom-0 z-10"
+                variants={imgAnimation}
+                initial="hidden"
+                animate={animationComplete ? "visible" : "hidden"}
+              />
+            </div>
+          </div>
+        )}
 
         <RegisterModal
           isModalOpen={isRegisterModalOpen}
