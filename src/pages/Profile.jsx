@@ -130,19 +130,35 @@ export default function Profile() {
 
       {/* Image Change Modal */}
       {showImageModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-white p-4 rounded shadow-md">
-            <label htmlFor="imageUrl">New Image URL:</label>
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-md w-96">
+            <label
+              htmlFor="imageUrl"
+              className="block mb-2 text-lg font-semibold"
+            >
+              New Image URL:
+            </label>
             <input
               type="text"
               id="imageUrl"
               value={newImageUrl}
               onChange={handleImageUrlChange}
+              className="w-full border border-gray-300 rounded-md p-2 mb-4"
             />
-            <button onClick={handleImageSubmit}>Submit</button>
-            <button className="p-4" onClick={handleCloseModal}>
-              X
-            </button>
+            <div className="flex justify-between">
+              <button
+                onClick={handleImageSubmit}
+                className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-blue-600"
+              >
+                Submit
+              </button>
+              <button
+                className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400"
+                onClick={handleCloseModal}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}
