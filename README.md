@@ -2,6 +2,8 @@
 
 ![image](/src//assets//Screenshot.png)
 
+- Deployed site: https://heroic-taffy-26146d.netlify.app/
+
 
 
 ### Overview
@@ -19,13 +21,12 @@ The project utilized React.js, emphasizing a modular and component-based archite
 ## Built with
 
 - ReactJs https://react.dev/
-- Vite https://vitejs.dev/
 - TailwindCSS https://tailwindcss.com/
-- Components from ShadCN https://ui.shadcn.com/
-- Toast components from: Sonner https://sonner.emilkowal.ski/
+- Vite https://vitejs.dev/
 - Icons from: React icons https://react-icons.github.io/react-icons/
 - TanStack Query https://tanstack.com/query/latest
 - TanStack Router https://tanstack.com/router/v1
+- Toast components from: Sonner https://sonner.emilkowal.ski/
 
 ### Key Features
 
