@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../AuthContext";
 import { motion, useAnimation } from "framer-motion";
-import vr from "../../assets/Vr.png";
+import virtual from "../../assets/Virtual.png";
 import headset from "../../assets/Headset.png";
 import speaker from "../../assets/Speaker.png";
 import chair from "../../assets/Chair.png";
@@ -113,7 +113,7 @@ export default function Banners() {
                   </motion.div>
                 </div>
                 <motion.img
-                  src={vr}
+                  src={virtual}
                   alt="VR-Image"
                   style={{ width: "auto", height: "350px" }}
                   className="absolute right-[400px] bottom-0 z-10 hidden xl:block"
