@@ -36,6 +36,16 @@ The project utilized React.js, emphasizing a modular and component-based archite
 3. **Post Management:**
    - Create, edit, delete, bid and view listings in detail.
 
+   ### Challenges & Achievements
+
+- Successful API integration, including authentication and various HTTP methods.
+- User Experience Focus: Prioritization of user experience resulted in an intuitive and engaging interface.
+
+### Future Plans
+
+- Implement additional profile customization features.
+- Enhanced filtering system for listings.
+
 ## Getting started
 
 ### Installing
@@ -70,17 +80,7 @@ Paste this:
 
 And replace \_EMAIL and \_PASSWORD with your test account details.
 
-### Challenges & Achievements
-
-- Successful API integration, including authentication and various HTTP methods.
-- User Experience Focus: Prioritization of user experience resulted in an intuitive and engaging interface.
-
-### Future Plans
-
-- Implement additional profile customization features.
-- Enhanced filtering system for listings.
-
-### Conclusion
+## Conclusion
 
 The project was successfully completed, enhancing my technical skills and emphasizing collaboration and user-centered design. This experience has equipped me for future web development challenges.
 
