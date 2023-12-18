@@ -107,16 +107,13 @@ const LoginModal = ({ isModalOpen, setModalOpen }) => {
                   {labels.map((label, index) => (
                     <div className="w-full relative mb-6" key={index}>
                       <input
-                      data-cy={label}
-                        type={
-                          label.toLowerCase() === "email" ? "email" : "text"
-                        }
-                        value={inputValues[label.toLowerCase()]}
-                        onChange={(e) =>
-                          handleInputChange(label, e.target.value)
-                        }
-                        className="peer w-full p-4 pt-6 font-light bg-white border-2 rounded-md outline-none transition hover:border-blue-400 focus:border-blue-400 cursor-pointer"
-                      />
+      data-cy={label}
+      type={label.toLowerCase() === "email" ? "email" : "password"}
+      value={inputValues[label.toLowerCase()]}
+      onChange={(e) => handleInputChange(label, e.target.value)}
+      autoComplete={label.toLowerCase()}
+      className="peer w-full p-4 pt-6 font-light bg-white border-2 rounded-md outline-none transition hover:border-blue-400 focus:border-blue-400 cursor-pointer"
+    />
                       <label
                         className="
                   absolute 

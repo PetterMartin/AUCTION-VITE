@@ -566,7 +566,7 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
             </div>
           </div>
 
-          <div className="flex px-6 pb-6 gap-4">
+          <div className="flex px-6 pb-6 gap-4 mt-4">
             <button
               type="button"
               onClick={moveToPreviousStep}
