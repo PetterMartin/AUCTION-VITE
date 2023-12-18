@@ -173,7 +173,7 @@ export default function Listing() {
 
   return (
     <>
-      <div className="max-w-screen-lg mx-auto pb-12">
+      <div className="max-w-screen-lg mx-auto pb-12 px-4">
         <div className="flex flex-col">
           <h1 className="text-gray-800 font-semibold text-3xl mt-8">
             {listing.title

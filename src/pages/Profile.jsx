@@ -86,11 +86,11 @@ export default function Profile() {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <div className="flex items-center gap-8 p-8">
+      <div className="flex items-center gap-8 p-4">
         {/* Profile Image */}
         <div className="flex flex-col">
           <div className="mx-auto flex items-center justify-center relative">
-            <div className="h-40 w-40 relative">
+            <div className="h-40 w-40 relative ">
               <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-600 to-blue-400"></div>
               <div className="absolute inset-1.5 rounded-full bg-white overflow-hidden p-2">
                 <img

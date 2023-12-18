@@ -138,10 +138,6 @@ function Listings({ searchQuery }) {
             const countdown = calculateCountdown(endsAt);
             const formattedCountdown = formatCountdown(countdown);
 
-            if (!media || media.length === 0) {
-              return null;
-            }
-
 
             return (
               <div key={id} data-cy="listing" className="relative">
