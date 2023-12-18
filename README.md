@@ -1,6 +1,6 @@
 # React + Vite
 
-![image](/assets/Screenshot.png)
+![image](/src//assets//Screenshot.png)
 
 
 
