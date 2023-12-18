@@ -1,5 +1,5 @@
 import { useState } from "react";
-import MobileHeader from "../nav/MobileHeader"
+import MobileHeader from "../nav/MobileHeader";
 import Searchbar from "../searchbar/Searchbar";
 import Banners from "./Banners";
 import Listings from "../listings/Listings";
@@ -18,12 +18,13 @@ const HeroSection = () => {
     setSearchQuery("");
   };
 
-  const handleHomeClick = () => {
-    handleClearSearch();
+  const handleCategoryClick = (category) => {
+    setSearchQuery(category);
+    setSelectedCategory(category);
   };
 
-  const handleCategoryClick = (category) => {
-    setSearchQuery(category); 
+  const handleBrowseClick = (category) => {
+    setSearchQuery(category);
     setSelectedCategory(category);
   };
 
@@ -38,13 +39,13 @@ const HeroSection = () => {
       </div>
 
       {searchQuery === "" && (
-          <>
-            <Banners />
-            <FeatureSection />
-          </>
-        )}
+        <>
+          <Banners onBrowseClick={handleBrowseClick} />
+          <FeatureSection />
+        </>
+      )}
 
-      <Listings searchQuery={searchQuery} />
+      <Listings searchQuery={searchQuery} onClearSearch={handleClearSearch} />
     </div>
   );
 };

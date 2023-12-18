@@ -119,7 +119,6 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
       );
 
       if (response.ok) {
-
         toast.success(`Listing Created`, {
           duration: 5000,
         });
@@ -169,22 +168,22 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-        {categories.map((category, index) => (
-  <div
-    key={index}
-    onClick={() => handleCategoryClick(category)}
-    className={`rounded-xl border-2 p-2 flex flex-col items-start text-gray-500 hover:text-blue-400 hover:border-blue-400 focus:border-blue-400 transition cursor-pointer ${
-      index >= categories.length - 2 ? 'hidden sm:flex' : ''
-    }`}
-  >
-    <div className="flex items-center justify-center ms-5">
-      {categoryIcons[category]}
-    </div>
-    <div className="px-5 rounded-full mt-2">
-      <p>{category}</p>
-    </div>
-  </div>
-))}
+          {categories.map((category, index) => (
+            <div
+              key={index}
+              onClick={() => handleCategoryClick(category)}
+              className={`rounded-xl border-2 p-2 flex flex-col items-start text-gray-500 hover:text-blue-400 hover:border-blue-400 focus:border-blue-400 transition cursor-pointer ${
+                index >= categories.length - 2 ? "hidden sm:flex" : ""
+              }`}
+            >
+              <div className="flex items-center justify-center ms-5">
+                {categoryIcons[category]}
+              </div>
+              <div className="px-5 rounded-full mt-2">
+                <p>{category}</p>
+              </div>
+            </div>
+          ))}
         </div>
         <div className="mt-6">
           <label
@@ -226,7 +225,7 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
                 Where are you located?
               </div>
               <div className="font-light text-neutral-500 mt-2 mb-6">
-              Select the country you will be sending from
+                Select the country you will be sending from
               </div>
             </div>
             <CountrySelect value={selectedCountry} onChange={handleChange} />
@@ -276,7 +275,8 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
           <div className="relative p-6 flex-auto">
             <div className="text-start">
               <div className="flex text-2xl font-semibold">
-                Take a picture of your listing <TiCamera size={25} className="m-0.5 ms-2"/>
+                Take a picture of your listing{" "}
+                <TiCamera size={25} className="m-0.5 ms-2" />
               </div>
               <div className="font-light text-neutral-500 mt-2 mb-6">
                 You can add more than one!
@@ -591,7 +591,7 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
 
   return (
     <>
-    <Toaster richColors />
+      <Toaster richColors />
       {isModalOpen && (
         <form
           onSubmit={handleOnSubmit}
@@ -600,7 +600,6 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
           <div className="relative w-full md:w-4/6 lg:w-3/6 xl:w-2/5 my-6 mx-auto h-full lg:h-auto md:h-auto">
             <div>
               <div className="h-full lg:h-auo md:h-auto border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-one">
-
                 <div className="flex items-center p-6 rounded-t justify-center relative border-b-[1px]">
                   <button
                     className="p-1 border-0 hover:opacity-70 transition absolute left-9"

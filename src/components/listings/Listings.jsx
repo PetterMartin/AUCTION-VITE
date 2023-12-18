@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { AiOutlineClose } from "react-icons/ai";
 import { fetchAllListings } from "../../libs/api";
 import { FaRegClock } from "react-icons/fa6";
 import { Toaster, toast } from "sonner";
@@ -8,7 +9,7 @@ import NoImage from "../../assets/No-Image.png";
 import HeartButton from "../buttons/HeartButton";
 import Loader from "../loader/Loader";
 
-function Listings({ searchQuery }) {
+function Listings({ searchQuery, onClearSearch }) {
   const { isLoggedIn } = useAuth();
   const [listings, setListings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -58,7 +59,6 @@ function Listings({ searchQuery }) {
 
     return () => clearInterval(intervalId);
   }, [searchQuery, displayCount]);
-
 
   const calculateCountdown = (endTime) => {
     const now = new Date().getTime();
@@ -119,16 +119,49 @@ function Listings({ searchQuery }) {
     setDisplayCount((prevCount) => prevCount + 10);
   };
 
+  const filteredListings = listings.filter(
+    (listing) =>
+      listing.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (listing.description &&
+        listing.description
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())) ||
+      (listing.tags &&
+        listing.tags.some((tag) =>
+          tag.toLowerCase().includes(searchQuery.toLowerCase())
+        ))
+  );
+
   return (
     <main className="container mx-auto lg:px-20 mt-4 pb-12">
       <hr className="my-8 border border-blue-500" />
 
       {isLoading && <Loader />}
 
-      {listings.length === 0 && !isLoading && (
-        <div className="text-center text-gray-500 my-8">
+      {filteredListings.length > 0 && (
+        <div className="text-center text-gray-500 my-6 relative">
+          Showing listings with{" "}
+          <span className="font-bold text-lg text-blue-500">{searchQuery}</span>
+          <button
+            onClick={onClearSearch}
+            className="ml-2 focus:outline-none"
+          >
+            <AiOutlineClose className="hover:opacity-70" />
+          </button>
+        </div>
+      )}
+
+      {filteredListings.length === 0 && !isLoading && (
+        <div className="text-center text-gray-500 my-6 relative">
           Sorry, no listings with{" "}
-          <span className="font-bold text-lg">{searchQuery}</span> available.
+          <span className="font-bold text-lg text-blue-500">{searchQuery}</span>{" "}
+          available.
+          <button
+            onClick={onClearSearch}
+            className="ml-2 focus:outline-none"
+          >
+            <AiOutlineClose className="hover:opacity-70" />
+          </button>
         </div>
       )}
 
@@ -137,7 +170,6 @@ function Listings({ searchQuery }) {
           ({ id, title, description, tags, media, endsAt, bids }) => {
             const countdown = calculateCountdown(endsAt);
             const formattedCountdown = formatCountdown(countdown);
-
 
             return (
               <div key={id} data-cy="listing" className="relative">
@@ -274,7 +306,6 @@ function Listings({ searchQuery }) {
           </button>
         </div>
       )}
-
     </main>
   );
 }

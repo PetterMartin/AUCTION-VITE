@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { CiSearch } from "react-icons/ci";
-import { AiOutlineClose } from "react-icons/ai";
 
 export default function Searchbar({ onSearch }) {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
@@ -31,12 +30,6 @@ export default function Searchbar({ onSearch }) {
     setDropdownVisible(false);
   };
 
-  const handleClearSearch = () => {
-    setSearchQuery("");
-    onSearch("");
-    setDropdownVisible(false);
-  };
-
   return (
     <div className="header pt-4 xl:pt-12 pb-4 z-10 relative">
       <div
@@ -57,16 +50,6 @@ export default function Searchbar({ onSearch }) {
             }
           }}
         />
-        {searchQuery && (
-          <button
-            className="bg-blue-100 p-2 rounded-md hover:bg-gray-300 flex items-center focus:outline-none me-2 transition duration-200 ease-in-out"
-            type="button"
-            onClick={handleClearSearch}
-          >
-            Clear
-            <AiOutlineClose className="ml-1.5" />
-          </button>
-        )}
         <button
         data-cy="search-btn"
           className="bg-gradient-to-b from-blue-600 to-blue-500 rounded-r bg-primary px-4 py-2.5 font-medium uppercase leading-tight text-white shadow-md hover:bg-primary-700 hover:shadow-lg focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg"

@@ -7,7 +7,7 @@ import speaker from "../../assets/Speaker.png";
 import chair from "../../assets/Chair.png";
 import RegisterModal from "../modal/RegisterModal";
 
-export default function Banners() {
+export default function Banners({ onBrowseClick }) {
   const { isLoggedIn } = useAuth();
   const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
   const [animationComplete, setAnimationComplete] = useState(false);
@@ -107,7 +107,8 @@ export default function Banners() {
                     <h1 className="text-6xl font-bold text-emerald-200">
                       OCULUS
                     </h1>
-                    <button className="bg-white rounded-full px-6 py-2 text-emerald-500 text-lg hover:bg-gray-100">
+                    <button className="bg-white rounded-full px-6 py-2 text-emerald-500 text-lg hover:bg-gray-100"
+                    onClick={() => onBrowseClick("Devices")}>
                       Browse
                     </button>
                   </motion.div>
@@ -138,7 +139,10 @@ export default function Banners() {
                 <p className="text-lg font-light">New</p>
                 <p className="text-2xl font-semibold my-2">Furniture</p>
                 <h1 className="text-5xl font-bold text-amber-200">IKEA</h1>
-                <button className="bg-white rounded-full px-6 py-2 mt-4 text-amber-500 text-lg hover:bg-gray-100">
+                <button
+                  className="bg-white rounded-full px-6 py-2 mt-4 text-amber-500 text-lg hover:bg-gray-100"
+                  onClick={() => onBrowseClick("Furniture")}
+                >
                   Browse
                 </button>
               </div>
@@ -154,7 +158,10 @@ export default function Banners() {
                 <p className="text-lg font-light">New</p>
                 <p className="text-2xl font-semibold my-2">Electronics</p>
                 <h1 className="text-5xl font-bold text-blue-400">SPEAKER</h1>
-                <button className="bg-white rounded-full px-6 py-2 mt-4 text-blue-500 text-lg hover:bg-gray-100">
+                <button
+                  className="bg-white rounded-full px-6 py-2 mt-4 text-blue-500 text-lg hover:bg-gray-100"
+                  onClick={() => onBrowseClick("Electronics")}
+                >
                   Browse
                 </button>
               </div>
@@ -171,7 +178,10 @@ export default function Banners() {
               <p className="text-lg font-light">Trending</p>
               <p className="text-3xl font-semibold my-2">Devices</p>
               <h1 className="text-5xl font-bold text-rose-400">HEADSET</h1>
-              <button className="bg-white rounded-full px-6 py-2 mt-4 text-rose-500 text-lg hover:bg-gray-100">
+              <button
+                className="bg-white rounded-full px-6 py-2 mt-4 text-rose-500 text-lg hover:bg-gray-100"
+                onClick={() => onBrowseClick("Devices")}
+              >
                 Browse
               </button>
             </div>
