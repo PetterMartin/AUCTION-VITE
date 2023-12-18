@@ -116,7 +116,7 @@ export default function Banners() {
                   src={vr}
                   alt="VR-Image"
                   style={{ width: "auto", height: "350px" }}
-                  className="absolute right-[400px] bottom-0 z-10"
+                  className="absolute right-[400px] bottom-0 z-10 hidden xl:block"
                   variants={imgAnimation}
                   initial="hidden"
                   animate={animationComplete ? "visible" : "hidden"}
@@ -131,7 +131,7 @@ export default function Banners() {
           setModalOpen={setRegisterModalOpen}
         />
 
-        <div className="flex justify-center p-8 gap-8 text-white">
+        <div className="flex justify-center p-8 gap-8 text-white ">
           <div className="flex gap-8">
             <div className="bg-gradient-to-b from-amber-400 to-amber-300 p-8 rounded-2xl">
               <div>
@@ -179,7 +179,7 @@ export default function Banners() {
               src={headset}
               alt="Headset Image"
               style={{ width: "auto", height: "300px" }}
-              className="mt-8"
+              className="mt-8 hidden xl:block"
             />
           </div>
         </div>
