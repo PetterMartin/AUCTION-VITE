@@ -7,7 +7,9 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## [REPORT] Social Media Platform Front-End Client
+## [REPORT] Auction House Front-End Client
+
+
 
 ### Overview
 
@@ -33,18 +35,14 @@ The project utilized React.js, emphasizing a modular and component-based archite
 ### Challenges & Achievements
 
 - Successful API integration, including authentication and various HTTP methods.
-- Collaborative Development: Effective version control and collaboration ensured consistency and quality.
 - User Experience Focus: Prioritization of user experience resulted in an intuitive and engaging interface.
 
 ### Future Plans
 
 - Implement additional profile customization features.
-- Explore real-time updates for posts and comments.
+- Enhanced filtering system for listings.
 
 ### Conclusion
 
-The project was successfully completed, enhancing our technical skills and emphasizing collaboration and user-centered design. This experience has equipped us for future web development challenges.
+The project was successfully completed, enhancing my technical skills and emphasizing collaboration and user-centered design. This experience has equipped me for future web development challenges.
 
-## Usage
-
-...
