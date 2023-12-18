@@ -44,9 +44,7 @@ const EditModal = ({
         });
 
         if (response !== null) {
-          console.log("API Response:", response);
 
-          // Update the listings without reloading the page
           setListings((prevListings) =>
             prevListings.map((listing) =>
               listing.id === currentListing.id
@@ -82,8 +80,6 @@ const EditModal = ({
       if (currentListing && currentListing.id) {
         const response = await deleteListing(currentListing.id);
 
-        console.log("API Response (Delete):", response);
-
         setListings((prevListings) =>
           prevListings.filter((listing) => listing.id !== currentListing.id)
         );
@@ -106,7 +102,6 @@ const EditModal = ({
       }
     } catch (error) {
       console.error("Error deleting listing:", error);
-      // Close the modal and show a success message even on error
       toast.success(`Listing Deleted`, {
         duration: 5000,
       });
@@ -169,15 +164,15 @@ const EditModal = ({
                             </label>
                             <input
                               type="text"
-                              value={newMedia} // Assuming newMedia is an array of image URLs
+                              value={newMedia}
                               onChange={
-                                (e) => setNewMedia([e.target.value]) // Update newMedia value
+                                (e) => setNewMedia([e.target.value])
                               }
                               className="mt-1 p-2 w-full border rounded-md"
                             />
                             {newMedia.length > 0 && (
                             <img
-                              src={newMedia[0]} // Use the first element directly
+                              src={newMedia[0]} 
                               alt="Current Listing Image"
                               className="mt-2 object-cover w-80 h-50 rounded-md"
                             />

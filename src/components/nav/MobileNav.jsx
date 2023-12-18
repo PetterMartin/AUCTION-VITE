@@ -7,7 +7,7 @@ import { RiHeart3Line } from "react-icons/ri";
 import CreatePostModal from "../modal/CreatePostModal";
 
 const Mobilenav = () => {
-  const auth = useAuth(); // Use the useAuth hook to get authentication status and user information
+  const auth = useAuth(); 
   const user = auth.user;
 
   const [isCreatePostModalOpen, setCreatePostModalOpen] = useState(false);

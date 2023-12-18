@@ -60,7 +60,6 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
     const currentTime = Date.now();
 
     if (currentTime - lastRequestTime < 10000) {
-      console.log("Wait 10 seconds between requests.");
       return;
     }
 
@@ -120,7 +119,6 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
       );
 
       if (response.ok) {
-        console.log("Listing successful!");
 
         toast.success(`Listing Created`, {
           duration: 5000,
@@ -139,7 +137,6 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
   }
 
   const handleCategoryClick = (clickedCategory) => {
-    // You can customize how you want to append the category to existing userTags
     setUserTags(
       (prevUserTags) =>
         prevUserTags + (prevUserTags ? `, ${clickedCategory}` : clickedCategory)
@@ -190,9 +187,9 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
         <div className="mt-6">
           <label
             htmlFor="userTags"
-            className="block text-md font-light mb-2 font-light text-neutral-500"
+            className="block text-md font-light mb-2 text-neutral-500"
           >
-            Or add your own tags (Optional)
+            Or add your own tags
           </label>
           <input
             type="text"
@@ -480,7 +477,6 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
                 Take a moment to ensure everything looks just right!
               </div>
             </div>
-            {/* Grouping the inputs into one flex container */}
             <div className="flex flex-col items-center text-center w-full">
               <div className="w-full relative">
                 <input
@@ -544,7 +540,6 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
                 </div>
               )}
             </div>
-            {/* End of grouped inputs */}
 
             <div className="flex gap-2 font-semibold p-2">
               <div className="text-xl">🌍</div>
@@ -587,7 +582,6 @@ export default function CreatePostModal({ isModalOpen, setModalOpen }) {
   }
 
   useEffect(() => {
-    // Reset step to 0 when modal is closed
     if (!isModalOpen) {
       setStep(STEPS.CATEGORY);
     }

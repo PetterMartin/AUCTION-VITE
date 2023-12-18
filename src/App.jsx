@@ -10,7 +10,6 @@ export default function App() {
   
   const handleClearSearch = () => {
     setSearchQuery("");
-    // Additional logic if needed
   };
   return (
     <>

@@ -21,7 +21,7 @@ export default function Banners() {
 
     animateBanner();
 
-    return () => bannerControls.stop(); // Cleanup on component unmount
+    return () => bannerControls.stop();
   }, [bannerControls]);
 
   const headingAnimation = {

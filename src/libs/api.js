@@ -37,12 +37,10 @@ export async function fetchAllListings() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          // Add any additional headers if needed
         },
       }
     );
 
-    // Check if the response status is OK (200)
     if (response.ok) {
       const data = await response.json();
       return data;
@@ -50,7 +48,6 @@ export async function fetchAllListings() {
       console.error(`Failed to fetch listings. Status: ${response.status}`);
     }
   } catch (error) {
-    // Handle fetch errors
     console.error("Error fetching listings:", error);
   }
 }
@@ -72,12 +69,11 @@ export async function fetchListingById(listingId) {
 
     if (response.ok) {
       const data = await response.json();
-      return data; // Return the entire data object
+      return data; 
     } else {
       console.error(`Failed to fetch. Status: ${response.status}`);
     }
   } catch (error) {
-    // Handle fetch errors
     console.error("Error fetching listing:", error);
   }
 }
@@ -110,11 +106,11 @@ export async function updateListing(
       return data;
     } else {
       console.error(`Failed to update listing. Status: ${response.status}`);
-      return null; // Explicitly return null when the update fails
+      return null; 
     }
   } catch (error) {
     console.error("Error updating listing:", error);
-    return null; // Explicitly return null when there's an error
+    return null; 
   }
 }
 
@@ -133,7 +129,6 @@ export async function deleteListing(listingId) {
     const response = await fetch(url, options);
 
     if (response.ok) {
-      // Optionally return some data from the response if needed
       const data = await response.json();
       return data;
     } else {
@@ -341,7 +336,7 @@ export async function submitBid(listingId, bidAmount) {
 
     if (response.ok) {
       const data = await response.json();
-      return { ok: true, data }; // Return an object with 'ok' flag and data
+      return { ok: true, data }; 
     } else {
       const errorData = await response.json();
       console.error(
@@ -349,7 +344,7 @@ export async function submitBid(listingId, bidAmount) {
           response.status
         }, Error: ${JSON.stringify(errorData)}`
       );
-      return { ok: false, error: errorData }; // Return an object with 'ok' flag and error data
+      return { ok: false, error: errorData }; 
     }
   } catch (error) {
     console.error("Error submitting bid:", error);

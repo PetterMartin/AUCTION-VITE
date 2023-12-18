@@ -132,7 +132,6 @@ export default function Listing() {
       const bidResponse = await submitBid(listing.id, parsedBidAmount);
 
       if (bidResponse.ok) {
-        console.log("Bid submitted successfully:", bidResponse.data);
 
         // Fetch the updated listing information after a successful bid
         const updatedListingData = await fetchListingById(listing.id);

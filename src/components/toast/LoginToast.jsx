@@ -10,7 +10,7 @@ export default function LoginToast({ name }) {
     reverse: hideToast,
     onRest: () => {
       if (hideToast) {
-        // You can perform other cleanup actions here if needed
+        // 
       }
     },
   });

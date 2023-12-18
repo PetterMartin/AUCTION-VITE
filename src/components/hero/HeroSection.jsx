@@ -16,12 +16,10 @@ const HeroSection = () => {
 
   const handleClearSearch = () => {
     setSearchQuery("");
-    // Additional logic if needed
   };
 
   const handleHomeClick = () => {
     handleClearSearch();
-    // Additional logic for handling home click
   };
 
   const handleCategoryClick = (category) => {

@@ -42,7 +42,6 @@ const RegisterModal = ({ isModalOpen, setModalOpen }) => {
 
   const handleRegistration = async () => {
     try {
-      // Validate input values
       if (inputValues.password.length < 8) {
         throw new Error("Password must be at least 8 characters long");
       }
@@ -57,17 +56,15 @@ const RegisterModal = ({ isModalOpen, setModalOpen }) => {
         username: inputValues.username,
       });
 
-      // Handle successful registration (you can redirect or show a success message)
       console.log("Registration successful:", registrationData);
       setRegistrationStatus("success");
 
       toast.success("Registration successful! You may now Login", {
-        duration: 5000, // Optional, how long the toast should be displayed
+        duration: 5000, 
       });
 
-      closeModal(); // Close the modal upon successful registration
+      closeModal(); 
     } catch (error) {
-      // Handle validation errors or registration failure
       console.error("Registration failed:", error.message);
       setRegistrationStatus("error");
     }
@@ -80,7 +77,7 @@ const RegisterModal = ({ isModalOpen, setModalOpen }) => {
         email: "",
         password: "",
       });
-      setRegistrationStatus(null); // Reset registration status on modal open
+      setRegistrationStatus(null); 
     }
   }, [isModalOpen]);
 
@@ -153,7 +150,6 @@ const RegisterModal = ({ isModalOpen, setModalOpen }) => {
                         {label}
                       </label>
 
-                      {/* Add error message for password length */}
                       {label.toLowerCase() === "password" &&
                         inputValues.password.length < 8 &&
                         registrationStatus === "error" && (
@@ -162,7 +158,6 @@ const RegisterModal = ({ isModalOpen, setModalOpen }) => {
                           </p>
                         )}
 
-                      {/* Add error message for username length */}
                       {label.toLowerCase() === "username" &&
                         inputValues.username.length < 8 &&
                         registrationStatus === "error" && (
@@ -174,16 +169,14 @@ const RegisterModal = ({ isModalOpen, setModalOpen }) => {
                   ))}
 
                   {registrationStatus === "success" && (
-                    // Render success message or redirect
                     <p>Registration successful! Redirecting...</p>
                   )}
 
                   {registrationStatus === "error" && (
-                    // Render error message
                     <p>Registration failed. Please try again.</p>
                   )}
 
-                  {/* Always render the registration form */}
+
                   <button
                     className="w-full p-4 bg-gradient-to-b from-blue-600 to-blue-500 text-white font-semibold rounded-md transition duration-200 ease-in-out hover:opacity-80"
                     onClick={handleRegistration}

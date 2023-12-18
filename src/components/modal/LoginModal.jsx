@@ -47,16 +47,13 @@ const LoginModal = ({ isModalOpen, setModalOpen }) => {
         inputValues.password
       );
 
-      // Use loginData.accessToken instead of data.accessToken
       login(loginData);
 
-      // Set the user ID and access token separately
       localStorage.setItem("jwt", loginData.accessToken);
       localStorage.setItem("user_name", loginData.name);
 
       setLoginStatus("success");
       setModalOpen(false);
-      console.log("Login successful:", loginData);
     } catch (error) {
       console.error("Login failed:", error.message);
       setLoginStatus("error");
@@ -69,7 +66,7 @@ const LoginModal = ({ isModalOpen, setModalOpen }) => {
         email: "",
         password: "",
       });
-      setLoginStatus(null); // Reset login status on modal open
+      setLoginStatus(null); 
     }
   }, [isModalOpen]);
 
@@ -137,12 +134,10 @@ const LoginModal = ({ isModalOpen, setModalOpen }) => {
                   ))}
 
                   {loginStatus === "success" ? (
-                    // Render success message or redirect
                     <p className="text-emerald-600 ">
                       Login successful! Redirecting...
                     </p>
                   ) : loginStatus === "error" ? (
-                    // Render error message and keep the login form visible
                     <>
                       <p className="text-red-500 mb-4">
                         Login failed. Please check your credentials and try
@@ -156,7 +151,6 @@ const LoginModal = ({ isModalOpen, setModalOpen }) => {
                       </button>
                     </>
                   ) : (
-                    // Render login form
                     <button
                       data-cy="login-btn"
                       className="w-full p-4 bg-gradient-to-b from-blue-600 to-blue-500 text-white font-semibold rounded-md transition duration-200 ease-in-out hover:opacity-80"

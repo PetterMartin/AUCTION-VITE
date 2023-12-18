@@ -11,14 +11,12 @@ export default function LogoutButton({ setUser }) {
   };
 
   const handleLogout = async () => {
-    // Call the logout function from the authentication context
     logout();
 
-    // Reset the user state to null to ensure it reflects immediately in the UI
     setUser(null);
 
     toast.success("You have successfully Logged out", {
-      duration: 5000, // Optional, how long the toast should be displayed
+      duration: 5000, 
     });
   };
 

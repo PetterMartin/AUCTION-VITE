@@ -24,7 +24,6 @@ export default function Searchbar({ onSearch }) {
   const handleSearch = () => {
     onSearch(searchQuery);
 
-    // Update latest searches
     setLatestSearches((prevSearches) => [
       ...new Set([searchQuery, ...prevSearches]),
     ]);
